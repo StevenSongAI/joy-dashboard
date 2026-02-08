@@ -1,12 +1,12 @@
 {
-  "lastHeartbeat": "2026-02-08T12:00:00Z",
+  "lastHeartbeat": "2026-02-08T15:47:00Z",
   "lastMorningBrief": "2026-02-08",
   "lastEveningBrief": null,
   "lastLearningCycle": null,
   "totalHeartbeats": 0,
   "currentFocus": "Monitoring Atlantis Bahamas deals on RedFlagDeals",
   "nextPriority": "Check RedFlagDeals travel section daily for Atlantis resort deals",
-  "queuedForMorning": null,
+  "queuedForMorning": "Review Atlantis/Bahamas deal findings",
   "dataFreshness": {
     "travel": "2026-02-08 — 3 destinations, 3 bucket list",
     "local": "2026-02-08 — 8 places, 3 day trips",
@@ -14,7 +14,7 @@
     "experiences": "2026-02-08 — 6 bucket list items",
     "media": "2026-02-08 — 8 recommendations",
     "discoveries": "2026-02-08 — 2 discoveries",
-    "atlantisDeals": "Not yet checked"
+    "atlantisDeals": "2026-02-08 — Checked RedFlagDeals, no active deals found"
   },
   "knownPreferences": {
     "food": ["carnivore-friendly", "quality meat", "burgers", "steak", "ramen", "sushi", "hidden gems"],
@@ -29,16 +29,38 @@
   "discoveriesThatLanded": [],
   "discoveriesThatFlopped": [],
   "conversationInsights": [
-    {"date": "2026-02-08", "insight": "User wants me to monitor RedFlagDeals for Atlantis Bahamas deals from now until May. Trip is tentatively Feb 21-27."}
+    {"date": "2026-02-08", "insight": "User wants me to monitor RedFlagDeals for Atlantis Bahamas deals from now until May. Trip is tentatively Feb 21-27."},
+    {"date": "2026-02-08", "insight": "Checked RedFlagDeals for Atlantis deals - no active deals found. Historical deals show WestJet Toronto-Nassau ~$368-387 CAD return."}
   ],
   "dealMonitoring": {
     "atlantisBahamas": {
       "status": "active",
       "searchTerms": ["Atlantis", "Bahamas", "Paradise Island", "Nassau"],
-      "sources": ["redflagdeals.com/hot-deals-f9", "redflagdeals.com/travel-deals"],
+      "sources": ["redflagdeals.com/hot-deals-f9", "redflagdeals.com/travel-deals", "tags/bahamas", "tags/atlantis"],
       "dateRange": "2026-02-08 to 2026-05-31",
-      "lastChecked": null,
-      "dealsFound": []
+      "lastChecked": "2026-02-08T15:46:00Z",
+      "dealsFound": [],
+      "historicalDeals": [
+        {
+          "date": "Jan 2026",
+          "deal": "WestJet Vancouver (Abbotsford) to Bahamas $442 CAD roundtrip (2 stops)",
+          "source": "redflagdeals.com",
+          "status": "expired"
+        },
+        {
+          "date": "Nov 2025",
+          "deal": "WestJet Toronto to Bahamas $387 CAD roundtrip (direct)",
+          "source": "redflagdeals.com",
+          "status": "expired"
+        },
+        {
+          "date": "Oct 2024",
+          "deal": "WestJet Toronto to Nassau $368 CAD return (direct flights)",
+          "source": "redflagdeals.com",
+          "status": "expired"
+        }
+      ],
+      "notes": "No active Atlantis resort deals found. Flight deals to Nassau (Bahamas) typically $368-442 CAD roundtrip from Toronto. Atlantis resort packages rare on RFD - usually book direct or via travel agent."
     }
   }
 }
