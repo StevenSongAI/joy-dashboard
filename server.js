@@ -36,39 +36,47 @@ const generateId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
-// Initialize data files if they don't exist
+// Initialize data files if they don't exist (but don't overwrite existing ones)
 const initializeData = () => {
   const files = ['travel.json', 'local.json', 'events.json', 'experiences.json', 'media.json', 'discoveries.json', 'state.json', 'meta.json', 'calendars.json', 'linked-events.json'];
   
   files.forEach(file => {
     const filePath = path.join(DATA_DIR, file);
     if (!fs.existsSync(filePath)) {
-      const defaultData = file === 'state.json' ? {
-        lastHeartbeat: new Date().toISOString(),
-        lastMorningBrief: null,
-        lastEveningBrief: null,
-        lastLearningCycle: null,
-        totalHeartbeats: 0,
-        currentFocus: "Seeding dashboard with real data",
-        nextPriority: "Research Burlington restaurants and events",
-        queuedForMorning: null,
-        dataFreshness: {},
-        knownPreferences: {
-          food: ["carnivore-friendly", "quality meat", "burgers", "steak"],
-          travel: ["cultural experiences", "food-focused trips", "solo-friendly"],
-          activities: ["outdoors", "local hidden gems"],
-          avoids: ["beach resorts", "all-inclusive", "chain restaurants"]
-        },
-        discoveriesThatLanded: [],
-        discoveriesThatFlopped: [],
-        lessonsLearned: []
-      } : file === 'calendars.json' ? {
-        connected: [],
-        lastSync: null
-      } : file === 'linked-events.json' ? {
-        links: []
-      } : {};
-      writeData(file, defaultData);
+      // Only create if file doesn't exist - copy from repo if available
+      const repoFilePath = path.join(__dirname, 'data', file);
+      if (fs.existsSync(repoFilePath)) {
+        // Copy from repo
+        fs.copyFileSync(repoFilePath, filePath);
+      } else {
+        // Create default
+        const defaultData = file === 'state.json' ? {
+          lastHeartbeat: new Date().toISOString(),
+          lastMorningBrief: null,
+          lastEveningBrief: null,
+          lastLearningCycle: null,
+          totalHeartbeats: 0,
+          currentFocus: "Seeding dashboard with real data",
+          nextPriority: "Research Burlington restaurants and events",
+          queuedForMorning: null,
+          dataFreshness: {},
+          knownPreferences: {
+            food: ["carnivore-friendly", "quality meat", "burgers", "steak"],
+            travel: ["cultural experiences", "food-focused trips", "solo-friendly"],
+            activities: ["outdoors", "local hidden gems"],
+            avoids: ["beach resorts", "all-inclusive", "chain restaurants"]
+          },
+          discoveriesThatLanded: [],
+          discoveriesThatFlopped: [],
+          lessonsLearned: []
+        } : file === 'calendars.json' ? {
+          connected: [],
+          lastSync: null
+        } : file === 'linked-events.json' ? {
+          links: []
+        } : {};
+        writeData(file, defaultData);
+      }
     }
   });
 };
@@ -242,12 +250,20 @@ app.get('/api/linked-events', (req, res) => {
 app.get('/api/calendar-events', async (req, res) => {
   try {
     const calendars = readData('calendars.json');
+    console.log('Fetching calendar events. Connected calendars:', calendars.connected?.length || 0);
+    
     const allEvents = [];
+    const errors = [];
     
     for (const cal of calendars.connected || []) {
       try {
+        console.log(`Fetching calendar: ${cal.name} from ${cal.url.substring(0, 50)}...`);
         const icalData = await fetchCalendar(cal.url);
+        console.log(`Got ${icalData.length} bytes of iCal data for ${cal.name}`);
+        
         const events = parseICalData(icalData);
+        console.log(`Parsed ${events.length} events from ${cal.name}`);
+        
         events.forEach(e => {
           e.calendarName = cal.name;
           e.calendarId = cal.id;
@@ -255,18 +271,23 @@ app.get('/api/calendar-events', async (req, res) => {
         allEvents.push(...events);
       } catch (err) {
         console.error(`Failed to fetch calendar ${cal.name}:`, err.message);
+        errors.push({ calendar: cal.name, error: err.message });
       }
     }
     
     // Sort by start date
     allEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
     
+    console.log(`Returning ${allEvents.length} total events`);
+    
     res.json({
       events: allEvents,
       lastSync: calendars.lastSync,
-      count: allEvents.length
+      count: allEvents.length,
+      errors: errors.length > 0 ? errors : undefined
     });
   } catch (err) {
+    console.error('Calendar events error:', err);
     res.status(500).json({ error: err.message });
   }
 });
