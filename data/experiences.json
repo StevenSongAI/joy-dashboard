@@ -1,0 +1,104 @@
+{
+  "experiences": [
+    {
+      "id": "exp-001",
+      "title": "Drive the Icefields Parkway (Banff → Jasper)",
+      "category": "travel",
+      "status": "someday",
+      "description": "One of the most scenic drives in the world. 230km through the Canadian Rockies. Glaciers, turquoise lakes, wildlife.",
+      "why": "Once in a lifetime scenic drive. Best done in summer or early fall when roads are clear.",
+      "estimatedCost": "$2000-3000 CAD including flights + accommodation",
+      "timeRequired": "3-5 days",
+      "bestTime": "June - September",
+      "location": "Alberta, Canada",
+      "steps": [
+        "Book flights to Calgary",
+        "Rent a car with good mileage (long distances)",
+        "Book accommodation in Banff (2 nights) and Jasper (2 nights)",
+        "Key stops: Lake Louise, Peyto Lake, Columbia Icefield, Athabasca Falls"
+      ],
+      "priority": "high",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "exp-002",
+      "title": "Learn to make sushi",
+      "category": "skill",
+      "status": "someday",
+      "description": "Take a proper sushi-making class. Learn technique, rice preparation, knife skills.",
+      "why": "Sushi is expensive to eat out. Making it yourself is satisfying and impressive for hosting.",
+      "estimatedCost": "$150-300 CAD for a class",
+      "timeRequired": "Half day + practice at home",
+      "bestTime": "Any time",
+      "location": "Toronto cooking schools",
+      "priority": "medium",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "exp-003",
+      "title": "Hot air balloon ride",
+      "category": "adventure",
+      "status": "someday",
+      "description": "Sunrise hot air balloon ride over Ontario countryside. Champagne breakfast after landing.",
+      "why": "Unique perspective, peaceful experience, great for special occasions or bucket list.",
+      "estimatedCost": "$300-500 CAD per person",
+      "timeRequired": "3-4 hours (early morning)",
+      "bestTime": "May-October",
+      "location": "Various launch sites within 1-2hr of Toronto",
+      "priority": "medium",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "exp-004",
+      "title": "Complete a half marathon",
+      "category": "wellness",
+      "status": "someday",
+      "description": "Train for and complete a half marathon. 21.1km race.",
+      "why": "Structured fitness goal with a clear milestone. Toronto Waterfront Half is scenic and flat.",
+      "estimatedCost": "$100-200 race entry + training gear",
+      "timeRequired": "3-4 months training",
+      "bestTime": "Fall races (Oct) or Spring (May)",
+      "location": "Toronto or other GTA races",
+      "priority": "medium",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "exp-005",
+      "title": "Attend a major tech conference",
+      "category": "tech",
+      "status": "someday",
+      "description": "SXSW, CES, WWDC, or similar. Immerse in tech culture and future trends.",
+      "why": "Inspiration, networking, seeing what's next in tech before it hits mainstream.",
+      "estimatedCost": "$2000-5000 (tickets + travel + accommodation)",
+      "timeRequired": "3-5 days",
+      "bestTime": "Varies by conference",
+      "location": "Austin, Las Vegas, San Francisco, etc.",
+      "priority": "low",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "exp-006",
+      "title": "Wilderness camping trip",
+      "category": "adventure",
+      "status": "someday",
+      "description": "Backcountry camping in Algonquin or similar. No amenities, just nature.",
+      "why": "Disconnect from everything. Test self-sufficiency. See stars without light pollution.",
+      "estimatedCost": "$200-500 (gear + permits)",
+      "timeRequired": "2-3 days",
+      "bestTime": "June-September",
+      "location": "Algonquin Provincial Park",
+      "priority": "medium",
+      "addedAt": "2026-02-08"
+    }
+  ],
+  "categories": {
+    "travel": "✈️ Places to go",
+    "food": "🍽️ Culinary experiences",
+    "adventure": "🏔️ Outdoor and adrenaline",
+    "skill": "🎓 Things to learn",
+    "creative": "🎨 Creative projects",
+    "social": "👥 Social experiences",
+    "wellness": "🧘 Personal growth",
+    "tech": "💻 Tech experiences"
+  }
+}

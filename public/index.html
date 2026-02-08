@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joy Dashboard — Steven's Life Command Center</title>
+  
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              900: '#0f0f12',
+              800: '#1a1a1f',
+              700: '#25252d',
+              600: '#30303a',
+            },
+            travel: '#3b82f6',
+            food: '#f97316',
+            nature: '#22c55e',
+            nightlife: '#a855f7',
+            events: '#ec4899',
+            culture: '#14b8a6',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      background-color: #0f0f12;
+      color: #e5e5e5;
+    }
+    
+    .tab-active {
+      border-bottom: 2px solid #3b82f6;
+      color: #3b82f6;
+    }
+    
+    .card {
+      background: #1a1a1f;
+      border: 1px solid #25252d;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    
+    .card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+    }
+    
+    .map-container {
+      height: 400px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .confidence-stars {
+      color: #fbbf24;
+    }
+    
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .category-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    
+    .reaction-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    
+    .reaction-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    #calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .calendar-day:hover {
+      background: #25252d;
+    }
+    
+    .calendar-day.has-event {
+      background: #3b82f6;
+      font-weight: 600;
+    }
+    
+    .calendar-day.today {
+      border: 2px solid #3b82f6;
+    }
+    
+    .hidden-tab {
+      display: none;
+    }
+    
+    .leaflet-popup-content-wrapper {
+      background: #1a1a1f;
+      color: #e5e5e5;
+      border-radius: 8px;
+    }
+    
+    .leaflet-popup-tip {
+      background: #1a1a1f;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <header class="bg-dark-800 border-b border-dark-700 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-6 h-6 text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold">Joy Dashboard</h1>
+            <p class="text-xs text-gray-400">Steven's Life Command Center</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p id="current-time" class="text-sm font-medium"></p>
+          <p id="current-date" class="text-xs text-gray-400"></p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab Navigation -->
+    <nav class="max-w-7xl mx-auto px-4">
+      <div class="flex gap-1 overflow-x-auto scrollbar-hide">
+        <button onclick="showTab('whats-on')" id="tab-whats-on" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          🌟 What's On
+        </button>
+        <button onclick="showTab('travel')" id="tab-travel" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          ✈️ Travel
+        </button>
+        <button onclick="showTab('local')" id="tab-local" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          📍 Local
+        </button>
+        <button onclick="showTab('events')" id="tab-events" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          🎉 Events
+        </button>
+        <button onclick="showTab('bucket')" id="tab-bucket" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          🗺️ Bucket List
+        </button>
+        <button onclick="showTab('media')" id="tab-media" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          📺 Media
+        </button>
+        <button onclick="showTab('discoveries')" id="tab-discoveries" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          🔥 Discoveries
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    
+    <!-- Tab 1: What's On -->
+    <div id="content-whats-on" class="tab-content">
+      <div class="space-y-6">
+        <!-- Tonight/This Weekend -->
+        <section id="whats-on-tonight" class="card p-6">
+          <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="zap" class="w-6 h-6 text-yellow-500"></i>
+            <span id="tonight-title">Tonight</span>
+          </h2>
+          <div id="tonight-content" class="space-y-3">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Upcoming Events -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="calendar" class="w-5 h-5 text-pink-500"></i>
+            Upcoming Events
+          </h2>
+          <div id="upcoming-events" class="space-y-3">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Latest Discovery -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+            Latest Discovery
+          </h2>
+          <div id="latest-discovery">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Season Card -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="leaf" class="w-5 h-5 text-green-500"></i>
+            This Season in Ontario
+          </h2>
+          <div id="season-content">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 2: Travel -->
+    <div id="content-travel" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        <!-- Status Pipeline -->
+        <div class="card p-4">
+          <div class="flex flex-wrap gap-4 justify-center">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-gray-400" id="count-dreaming">0</div>
+              <div class="text-xs text-gray-500">Dreaming</div>
+            </div>
+            <div class="text-gray-600">→</div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-yellow-500" id="count-researching">0</div>
+              <div class="text-xs text-gray-500">Researching</div>
+            </div>
+            <div class="text-gray-600">→</div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-500" id="count-planning">0</div>
+              <div class="text-xs text-gray-500">Planning</div>
+            </div>
+            <div class="text-gray-600">→</div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-500" id="count-booked">0</div>
+              <div class="text-xs text-gray-500">Booked</div>
+            </div>
+            <div class="text-gray-600">→</div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-gray-500" id="count-completed">0</div>
+              <div class="text-xs text-gray-500">Completed</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Travel Map -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">World Map</h2>
+          <div id="travel-map" class="map-container"></div>
+        </section>
+        
+        <!-- Destinations -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Destinations</h2>
+          <div id="destinations-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Bucket List -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Bucket List Destinations</h2>
+          <div id="bucket-list-destinations">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 3: Local -->
+    <div id="content-local" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        <!-- Local Map -->
+        <section class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Burlington & GTA</h2>
+            <button onclick="getLocation()" class="px-4 py-2 bg-blue-600 rounded-lg text-sm hover:bg-blue-700">
+              <i data-lucide="map-pin" class="w-4 h-4 inline mr-1"></i>
+              Near Me
+            </button>
+          </div>
+          <div id="local-map" class="map-container"></div>
+        </section>
+        
+        <!-- Category Filters -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterLocal('all')" class="px-4 py-2 bg-dark-700 rounded-full text-sm hover:bg-dark-600">All</button>
+          <button onclick="filterLocal('restaurant')" class="px-4 py-2 bg-dark-700 rounded-full text-sm hover:bg-dark-600">🍽️ Restaurants</button>
+          <button onclick="filterLocal('bar')" class="px-4 py-2 bg-dark-700 rounded-full text-sm hover:bg-dark-600">🍺 Bars</button>
+          <button onclick="filterLocal('cafe')" class="px-4 py-2 bg-dark-700 rounded-full text-sm hover:bg-dark-600">☕ Cafes</button>
+          <button onclick="filterLocal('activity')" class="px-4 py-2 bg-dark-700 rounded-full text-sm hover:bg-dark-600">🎯 Activities</button>
+          <button onclick="filterLocal('outdoors')" class="px-4 py-2 bg-dark-700 rounded-full text-sm hover:bg-dark-600">🌲 Outdoors</button>
+        </div>
+        
+        <!-- Places List -->
+        <section class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Places</h2>
+            <button onclick="surpriseMe()" class="px-4 py-2 bg-purple-600 rounded-lg text-sm hover:bg-purple-700">
+              <i data-lucide="shuffle" class="w-4 h-4 inline mr-1"></i>
+              Surprise Me
+            </button>
+          </div>
+          <div id="places-list" class="space-y-3">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Day Trips -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Day Trips</h2>
+          <div id="day-trips-list">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 4: Events -->
+    <div id="content-events" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        <!-- Calendar -->
+        <section class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold" id="calendar-month">February 2025</h2>
+            <div class="flex gap-2">
+              <button onclick="changeMonth(-1)" class="p-2 bg-dark-700 rounded-lg hover:bg-dark-600">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+              </button>
+              <button onclick="changeMonth(1)" class="p-2 bg-dark-700 rounded-lg hover:bg-dark-600">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-7 gap-1 mb-2 text-center text-sm text-gray-500">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div id="calendar-grid"></div>
+        </section>
+        
+        <!-- Upcoming Events List -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Upcoming Events</h2>
+          <div id="events-list" class="space-y-3">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Seasonal Highlights -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4" id="seasonal-title">Winter Highlights</h2>
+          <div id="seasonal-highlights">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 5: Bucket List -->
+    <div id="content-bucket" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        <!-- Progress Overview -->
+        <div class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Progress</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center p-4 bg-dark-700 rounded-lg">
+              <div class="text-3xl font-bold text-gray-400" id="bucket-someday">0</div>
+              <div class="text-sm text-gray-500">Someday</div>
+            </div>
+            <div class="text-center p-4 bg-dark-700 rounded-lg">
+              <div class="text-3xl font-bold text-yellow-500" id="bucket-planning">0</div>
+              <div class="text-sm text-gray-500">Planning</div>
+            </div>
+            <div class="text-center p-4 bg-dark-700 rounded-lg">
+              <div class="text-3xl font-bold text-orange-500" id="bucket-scheduled">0</div>
+              <div class="text-sm text-gray-500">Scheduled</div>
+            </div>
+            <div class="text-center p-4 bg-dark-700 rounded-lg">
+              <div class="text-3xl font-bold text-green-500" id="bucket-done">0</div>
+              <div class="text-sm text-gray-500">Done</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Experiences by Category -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Experiences</h2>
+          <div id="experiences-list" class="space-y-4">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 6: Media -->
+    <div id="content-media" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        <!-- What to Watch Tonight -->
+        <section class="card p-6 bg-gradient-to-r from-blue-900/30 to-purple-900/30">
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-yellow-500"></i>
+            What Should I Watch Tonight?
+          </h2>
+          <div id="tonight-pick">
+            <button onclick="pickTonight()" class="px-6 py-3 bg-blue-600 rounded-lg font-medium hover:bg-blue-700">
+              Pick Something For Me
+            </button>
+          </div>
+        </section>
+        
+        <!-- Currently Watching -->
+        <section id="currently-watching-section" class="card p-6 hidden">
+          <h2 class="text-xl font-bold mb-4">Currently Watching</h2>
+          <div id="currently-watching"></div>
+        </section>
+        
+        <!-- Media by Type -->
+        <section class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Recommendations</h2>
+            <div class="flex gap-2">
+              <button onclick="filterMedia('all')" class="px-3 py-1 bg-dark-700 rounded-full text-sm">All</button>
+              <button onclick="filterMedia('tv-show')" class="px-3 py-1 bg-dark-700 rounded-full text-sm">TV</button>
+              <button onclick="filterMedia('movie')" class="px-3 py-1 bg-dark-700 rounded-full text-sm">Movies</button>
+              <button onclick="filterMedia('documentary')" class="px-3 py-1 bg-dark-700 rounded-full text-sm">Docs</button>
+            </div>
+          </div>
+          <div id="media-list" class="space-y-3">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 7: Discoveries -->
+    <div id="content-discoveries" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        <!-- This Week's Best Find -->
+        <section class="card p-6 bg-gradient-to-r from-orange-900/30 to-red-900/30">
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+            🔥 This Week's Best Find
+          </h2>
+          <div id="weekly-highlight">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Discovery Feed -->
+        <section class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Discovery Feed</h2>
+            <div class="flex gap-2">
+              <button onclick="filterDiscoveries('all')" class="px-3 py-1 bg-dark-700 rounded-full text-sm">All</button>
+              <button onclick="filterDiscoveries('new')" class="px-3 py-1 bg-dark-700 rounded-full text-sm">New Only</button>
+            </div>
+          </div>
+          <div id="discoveries-list" class="space-y-4">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

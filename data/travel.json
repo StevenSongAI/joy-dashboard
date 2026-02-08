@@ -1,0 +1,127 @@
+{
+  "destinations": [
+    {
+      "id": "dest-001",
+      "name": "Japan — Tokyo + Kyoto",
+      "type": "international",
+      "status": "dreaming",
+      "summary": "2-week Japan trip. Tokyo for tech/food/culture, Kyoto for temples and traditional experiences.",
+      "bestTime": "March-April (cherry blossom) or October-November (fall foliage)",
+      "estimatedBudget": {
+        "flights": "$1200-1800 CAD return",
+        "accommodation": "$100-200/night",
+        "daily": "$80-150 CAD",
+        "total": "$5000-8000 CAD for 2 weeks"
+      },
+      "highlights": [
+        "Shibuya crossing at night",
+        "Tsukiji outer market for sushi breakfast",
+        "Fushimi Inari shrine at sunrise",
+        "Akihabara for tech/gaming culture",
+        "Onsen day trip to Hakone"
+      ],
+      "practicalNotes": [
+        "Get a 14-day Japan Rail Pass (~$450 CAD)",
+        "Pocket WiFi rental at airport is essential",
+        "IC card (Suica/Pasmo) for trains",
+        "Cash still important outside major cities"
+      ],
+      "itinerary": [
+        {"day": 1, "title": "Arrive Tokyo — Shinjuku", "activities": ["Check into hotel", "Evening walk in Shinjuku", "Ramen at local spot"]},
+        {"day": 2, "title": "Tokyo — Tsukiji & Shibuya", "activities": ["Early Tsukiji market", "Shibuya crossing", "Meiji Shrine"]},
+        {"day": 3, "title": "Tokyo — Akihabara", "activities": ["Arcades and retro games", "Electronic stores", "Nakano Broadway"]}
+      ],
+      "coordinates": {"lat": 35.6762, "lng": 139.6503},
+      "tags": ["asia", "food", "culture", "tech", "solo-friendly"],
+      "addedAt": "2026-02-08",
+      "interest": "high"
+    },
+    {
+      "id": "dest-002",
+      "name": "Iceland — Ring Road",
+      "type": "international",
+      "status": "dreaming",
+      "summary": "The ultimate road trip. 230km through the Canadian Rockies of Iceland. Waterfalls, glaciers, hot springs.",
+      "bestTime": "June-August for midnight sun, September-March for northern lights",
+      "estimatedBudget": {
+        "flights": "$800-1200 CAD",
+        "accommodation": "$150-250/night",
+        "daily": "$100-150 CAD",
+        "total": "$4000-6000 CAD for 10 days"
+      },
+      "highlights": [
+        "Blue Lagoon hot springs",
+        "Skógafoss waterfall",
+        "Jökulsárlón glacier lagoon",
+        "Black sand beaches at Vik",
+        "Northern lights hunting"
+      ],
+      "coordinates": {"lat": 64.9631, "lng": -19.0208},
+      "tags": ["nature", "road-trip", "photography", "adventure"],
+      "addedAt": "2026-02-08",
+      "interest": "high"
+    },
+    {
+      "id": "dest-003",
+      "name": "New York City Weekend",
+      "type": "weekend-getaway",
+      "status": "dreaming",
+      "summary": "Long weekend in NYC. Shows, food, museums, and just soaking in the energy.",
+      "bestTime": "April-June or September-November",
+      "estimatedBudget": {
+        "flights": "$300-500 CAD",
+        "accommodation": "$200-400/night",
+        "daily": "$100-200 CAD",
+        "total": "$1200-2000 CAD for 3 days"
+      },
+      "highlights": [
+        "Broadway show",
+        "Chelsea Market",
+        "High Line walk",
+        "Brooklyn Bridge at sunset",
+        "Speakeasy bar crawl"
+      ],
+      "coordinates": {"lat": 40.7128, "lng": -74.006},
+      "tags": ["usa", "city", "food", "nightlife", "weekend"],
+      "addedAt": "2026-02-08",
+      "interest": "medium"
+    }
+  ],
+  "bucketListDestinations": [
+    {
+      "id": "bucket-001",
+      "name": "Patagonia — Torres del Paine",
+      "why": "The ultimate hiking destination. Towers, glaciers, wild landscapes at the end of the world.",
+      "bestTime": "December-February (summer)",
+      "roughBudget": "$5000-7000 CAD for 2 weeks",
+      "priority": "high",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "bucket-002",
+      "name": "Morocco — Marrakech & Sahara",
+      "why": "Intense sensory experience. Markets, food, desert camping under stars.",
+      "bestTime": "March-May or September-November",
+      "roughBudget": "$3000-4500 CAD for 10 days",
+      "priority": "medium",
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "bucket-003",
+      "name": "New Zealand — South Island",
+      "why": "Lord of the Rings landscapes, adventure activities, fjords.",
+      "bestTime": "December-February",
+      "roughBudget": "$6000-9000 CAD for 3 weeks",
+      "priority": "medium",
+      "addedAt": "2026-02-08"
+    }
+  ],
+  "completedTrips": [],
+  "travelPreferences": {
+    "interests": ["food/culinary", "culture/history", "nature/hiking", "tech/innovation"],
+    "avoids": ["beach resorts", "all-inclusive", "large tour groups"],
+    "style": "Solo or small group. Prefers authentic local experiences.",
+    "budget": "Mid-range. Will splurge on food and experiences.",
+    "fromAirport": "Toronto Pearson (YYZ) or Hamilton (YHM)"
+  }
+}

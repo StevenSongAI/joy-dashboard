@@ -1,0 +1,123 @@
+{
+  "items": [
+    {
+      "id": "media-001",
+      "title": "Shogun",
+      "type": "tv-show",
+      "genre": "Historical Drama",
+      "platform": "Disney+ / Hulu",
+      "status": "recommended",
+      "agentConfidence": 5,
+      "summary": "Epic historical drama set in 1600s Japan. Stunning production, complex political intrigue, and incredible world-building.",
+      "whySteven": "If Japan is on your travel bucket list, this is incredible immersion. Also just a genuinely prestige TV show.",
+      "seasons": 1,
+      "episodeLength": "60 min",
+      "tags": ["japan", "history", "drama", "prestige"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-002",
+      "title": "Severance",
+      "type": "tv-show",
+      "genre": "Sci-Fi Thriller",
+      "platform": "Apple TV+",
+      "status": "recommended",
+      "agentConfidence": 5,
+      "summary": "Employees undergo a procedure to separate work and personal memories. Mystery thriller with incredible atmosphere.",
+      "whySteven": "Best show of 2022. Perfect for fans of weird, thoughtful sci-fi like Black Mirror but with more depth.",
+      "seasons": 1,
+      "episodeLength": "45-60 min",
+      "tags": ["sci-fi", "thriller", "mystery", "work-culture"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-003",
+      "title": "The Bear",
+      "type": "tv-show",
+      "genre": "Drama",
+      "platform": "Disney+",
+      "status": "recommended",
+      "agentConfidence": 4,
+      "summary": "A young chef returns to Chicago to run his family's sandwich shop. Intense, authentic, beautifully made.",
+      "whySteven": "It's about food and ambition, but also family and grief. Surprisingly emotional. The food scenes are incredible.",
+      "seasons": 2,
+      "episodeLength": "30-60 min",
+      "tags": ["food", "drama", "chicago", "restaurants"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-004",
+      "title": "Dune: Part Two",
+      "type": "movie",
+      "genre": "Sci-Fi Epic",
+      "platform": "Theaters / VOD",
+      "status": "recommended",
+      "agentConfidence": 5,
+      "summary": "Paul Atreides unites with Chani and the Fremen while seeking revenge against those who destroyed his family.",
+      "whySteven": "The most visually stunning blockbuster in years. Denis Villeneuve at his best. Must see on the big screen.",
+      "tags": ["sci-fi", "epic", "visually-stunning", "theater"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-005",
+      "title": "Free Solo",
+      "type": "documentary",
+      "genre": "Adventure Documentary",
+      "platform": "Disney+ / National Geographic",
+      "status": "recommended",
+      "agentConfidence": 5,
+      "summary": "Alex Honnold attempts to climb El Capitan without ropes. Tense, beautiful, philosophical.",
+      "whySteven": "Even if you don't care about climbing, this is about human potential and obsession. Beautifully shot.",
+      "tags": ["climbing", "adventure", "nature", "inspiring"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-006",
+      "title": "Slow Horses",
+      "type": "tv-show",
+      "genre": "Spy Thriller",
+      "platform": "Apple TV+",
+      "status": "recommended",
+      "agentConfidence": 4,
+      "summary": "British MI5 rejects are banished to a dead-end department. But they keep stumbling into real cases.",
+      "whySteven": "Gary Oldman is excellent. Smart, cynical British spy thriller. Easy to binge, always entertaining.",
+      "seasons": 3,
+      "episodeLength": "45 min",
+      "tags": ["spy", "thriller", "british", "smart"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-007",
+      "title": "Oppenheimer",
+      "type": "movie",
+      "genre": "Historical Drama",
+      "platform": "VOD / Physical",
+      "status": "recommended",
+      "agentConfidence": 4,
+      "summary": "The story of J. Robert Oppenheimer and the creation of the atomic bomb. Nolan's most mature film.",
+      "whySteven": "Dense, intense, incredible performances. The kind of blockbuster that respects your intelligence.",
+      "tags": ["history", "drama", "nolan", "physics"],
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "media-008",
+      "title": "The Last of Us",
+      "type": "tv-show",
+      "genre": "Post-Apocalyptic Drama",
+      "platform": "Crave / HBO",
+      "status": "recommended",
+      "agentConfidence": 4,
+      "summary": "In a post-pandemic world, a hardened survivor escorts a teenage girl across America.",
+      "whySteven": "The rare video game adaptation that works. Emotional, well-acted, surprisingly character-focused.",
+      "seasons": 1,
+      "episodeLength": "60-80 min",
+      "tags": ["post-apocalyptic", "drama", "zombies", "emotional"],
+      "addedAt": "2026-02-08"
+    }
+  ],
+  "preferences": {
+    "likes": ["sci-fi", "tech documentaries", "historical drama", "thriller", "dark comedy"],
+    "dislikes": ["reality TV", "romance", "sitcoms"],
+    "platforms": ["Netflix", "Disney+", "Prime Video", "Apple TV+", "Crave"]
+  }
+}

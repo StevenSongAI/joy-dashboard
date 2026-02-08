@@ -1,0 +1,90 @@
+{
+  "events": [
+    {
+      "id": "event-001",
+      "name": "Burlington Winter Festival",
+      "type": "festival",
+      "date": "2026-02-15",
+      "endDate": "2026-02-16",
+      "time": "10:00 AM - 8:00 PM",
+      "location": "Spencer Smith Park, Burlington",
+      "coordinates": {"lat": 43.3289, "lng": -79.797},
+      "cost": "Free",
+      "summary": "Annual winter festival on the waterfront. Ice sculptures, food vendors, live music, and family activities.",
+      "whySteven": "Walking distance from downtown. Good food vendors. Outdoor winter activity that's actually fun.",
+      "link": "https://burlington.ca",
+      "tags": ["winter", "outdoor", "food", "free", "waterfront"],
+      "interest": null,
+      "addedAt": "2026-02-08",
+      "recurring": "annual"
+    },
+    {
+      "id": "event-002",
+      "name": "Toronto Light Festival",
+      "type": "festival",
+      "date": "2026-02-18",
+      "endDate": "2026-03-02",
+      "time": "Evening",
+      "location": "Distillery District, Toronto",
+      "cost": "Free",
+      "summary": "Light art installations throughout the Distillery District. Magical winter evening walk.",
+      "whySteven": "Unique date night or solo exploration. Great photos. Free.",
+      "link": "https://tolightfest.com",
+      "tags": ["winter", "art", "toronto", "free", "night"],
+      "interest": null,
+      "addedAt": "2026-02-08"
+    },
+    {
+      "id": "event-003",
+      "name": "Winterlicious Toronto",
+      "type": "food-event",
+      "date": "2026-01-31",
+      "endDate": "2026-02-13",
+      "time": "Lunch & Dinner",
+      "location": "Various restaurants, Toronto",
+      "cost": "$25-55 prix fixe",
+      "summary": "Toronto's restaurant week. Prix fixe menus at top restaurants across the city.",
+      "whySteven": "Try high-end restaurants at accessible prices. Good excuse for a Toronto day trip.",
+      "link": "https://winterlicious.ca",
+      "tags": ["food", "toronto", "restaurants", "deals"],
+      "interest": null,
+      "addedAt": "2026-02-08",
+      "recurring": "annual"
+    }
+  ],
+  "seasonalHighlights": {
+    "winter": [
+      "Skiing at Glen Eden / Blue Mountain (1-2hr drive)",
+      "Burlington Winter Festival (Feb)",
+      "Winterlicious Toronto (Jan-Feb) — prix fixe at top restaurants",
+      "Toronto Light Festival at Distillery District",
+      "Indoor climbing at Burlington's Gravity Climbing Gym",
+      "Cozy restaurant evenings — perfect time for steakhouse dinners"
+    ],
+    "spring": [
+      "Cherry blossoms at High Park Toronto (late April-May)",
+      "Maple syrup festivals at local farms (March)",
+      "Burlington Sound of Music Festival (June)",
+      "Farmers markets reopen (May)",
+      "First patio days of the year",
+      "Hamilton waterfall hiking (full water flow)"
+    ],
+    "summer": [
+      "Burlington Ribfest (Aug-Sep) — huge waterfront BBQ festival",
+      "Toronto Caribbean Carnival / Caribana (July-Aug)",
+      "Beach days at Burlington Beach",
+      "Toronto Islands day trip",
+      "Canada's Wonderland",
+      "Outdoor concerts at Spencer Smith Park",
+      "Niagara wine tours in peak season"
+    ],
+    "fall": [
+      "Niagara wine harvest festivals (Sep-Oct)",
+      "Dundas Peak fall foliage hike",
+      "Toronto International Film Festival (Sep)",
+      "Apple picking at Chudleigh's or nearby farms",
+      "Halloween events at Screemers / Canada's Wonderland",
+      "Thanksgiving weekend getaways"
+    ]
+  }
+}
