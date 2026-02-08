@@ -1,4 +1,13 @@
 {
-  "connected": [],
+  "connected": [
+    {
+      "id": "cal-joy-shared",
+      "name": "Shared Joy Calendar",
+      "url": "https://p118-caldav.icloud.com/published/2/MzUxODYzMTY2MzUxODYzMTk5rpyAey__2bxIswrZS_PpLo12I6PF8602cp6qy8dCjfcWpHXvPwIIIXXJfkS_QQJb_BMyFT-uoYlp7HuVHu8",
+      "type": "ical",
+      "color": "#ec4899",
+      "addedAt": "2026-02-08T12:54:00Z"
+    }
+  ],
   "lastSync": null
 }
