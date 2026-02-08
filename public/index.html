@@ -194,6 +194,9 @@
         <button onclick="showTab('discoveries')" id="tab-discoveries" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
           🔥 Discoveries
         </button>
+        <button onclick="showTab('calendar')" id="tab-calendar" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
+          📅 Calendar Sync
+        </button>
       </div>
     </nav>
   </header>
@@ -500,7 +503,69 @@
           </div>
         </section>
       </div>
+    <!-- Tab 8: Calendar Sync -->
+    <div id="content-calendar" class="tab-content hidden-tab">
+      <div class="space-y-6">
+        
+        <!-- Connected Calendars -->
+        <section class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold flex items-center gap-2">
+              <i data-lucide="calendar-plus" class="w-5 h-5 text-blue-500"></i>
+              Connected Calendars
+            </h2>
+            <button onclick="syncCalendars()" class="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              Sync Now
+            </button>
+          </div>
+          
+          <div id="connected-calendars" class="space-y-3">
+            <p class="text-gray-400">Loading...</p>
+          </div>
+          
+          <!-- Add Calendar Form -->
+          <div class="mt-6 pt-6 border-t border-dark-700">
+            <h3 class="font-medium mb-3">Add Calendar</h3>
+            <div class="flex flex-col md:flex-row gap-3">
+              <input type="text" id="cal-name" placeholder="Calendar name (e.g., 'Our Shared Calendar')" 
+                class="flex-1 px-4 py-2 bg-dark-700 rounded-lg border border-dark-600 focus:border-blue-500 outline-none">
+              <input type="url" id="cal-url" placeholder="iCal/ICS URL" 
+                class="flex-1 px-4 py-2 bg-dark-700 rounded-lg border border-dark-600 focus:border-blue-500 outline-none">
+              <button onclick="addCalendar()" class="px-6 py-2 bg-green-600 rounded-lg hover:bg-green-700">
+                Connect
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">
+              Supports Google Calendar (export as iCal), Apple Calendar, Outlook, or any iCal/ICS feed.
+            </p>
+          </div>
+        </section>
+        
+        <!-- Calendar Events -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4">Upcoming Calendar Events</h2>
+          <div id="calendar-events-list" class="space-y-3">
+            <p class="text-gray-400">Sync calendars to see events</p>
+          </div>
+        </section>
+        
+        <!-- Linked Events -->
+        <section class="card p-6">
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="link" class="w-5 h-5 text-green-500"></i>
+            Auto-Linked Events
+          </h2>
+          <p class="text-sm text-gray-400 mb-4">
+            Events from your calendar that match dashboard items (travel destinations, local places, experiences).
+          </p>
+          <div id="linked-events-list" class="space-y-3">
+            <p class="text-gray-400">No linked events yet. Events will auto-link when they match your dashboard items.</p>
+          </div>
+        </section>
+      </div>
     </div>
+
   </main>
 
   <script src="app.js"></script>

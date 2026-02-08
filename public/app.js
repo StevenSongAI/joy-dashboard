@@ -807,5 +807,305 @@ function formatRelativeTime(dateStr) {
   return formatDate(dateStr);
 }
 
+// ===== CALENDAR SYNC FUNCTIONS =====
+
+async function loadCalendarData() {
+  try {
+    const res = await fetch('/api/calendars');
+    currentData.calendars = await res.json();
+    
+    const linkedRes = await fetch('/api/linked-events');
+    currentData.linkedEvents = await linkedRes.json();
+  } catch (err) {
+    console.error('Failed to load calendar data:', err);
+  }
+}
+
+function renderCalendarSync() {
+  renderConnectedCalendars();
+  renderCalendarEvents();
+  renderLinkedEvents();
+}
+
+function renderConnectedCalendars() {
+  const calendars = currentData.calendars?.connected || [];
+  
+  document.getElementById('connected-calendars').innerHTML = calendars.length === 0 ? 
+    '<p class="text-gray-400">No calendars connected yet.</p>' :
+    calendars.map(cal => `
+      <div class="flex items-center justify-between p-3 bg-dark-700 rounded-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full" style="background-color: ${cal.color || '#3b82f6'}"></div>
+          <div>
+            <p class="font-medium">${cal.name}</p>
+            <p class="text-xs text-gray-400">Added ${formatRelativeTime(cal.addedAt)}</p>
+          </div>
+        </div>
+        <button onclick="deleteCalendar('${cal.id}')" class="p-2 hover:bg-red-600/20 rounded-lg text-red-400">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+    `).join('');
+  
+  // Show last sync time
+  if (currentData.calendars?.lastSync) {
+    document.getElementById('connected-calendars').insertAdjacentHTML('afterend', `
+      <p class="text-xs text-gray-500 mt-2">
+        Last synced: ${formatRelativeTime(currentData.calendars.lastSync)}
+      </p>
+    `);
+  }
+}
+
+async function renderCalendarEvents() {
+  try {
+    const res = await fetch('/api/calendar-events');
+    const data = await res.json();
+    const events = data.events || [];
+    
+    // Filter to upcoming events only
+    const now = new Date();
+    const upcoming = events
+      .filter(e => new Date(e.startDate) >= now)
+      .slice(0, 20);
+    
+    document.getElementById('calendar-events-list').innerHTML = upcoming.length === 0 ?
+      '<p class="text-gray-400">No upcoming events found.</p>' :
+      upcoming.map(event => `
+        <div class="flex items-start justify-between p-3 bg-dark-700 rounded-lg">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs text-gray-400">${event.calendarName}</span>
+              <span class="text-xs text-gray-500">•</span>
+              <span class="text-xs text-blue-400">${formatDate(event.startDate)}</span>
+            </div>
+            <h4 class="font-medium">${event.summary}</h4>
+            ${event.location ? `<p class="text-sm text-gray-400">📍 ${event.location}</p>` : ''}
+            ${event.description ? `<p class="text-sm text-gray-500 mt-1">${event.description.substring(0, 100)}...</p>` : ''}
+          </div>
+          <button onclick="manualLinkEvent('${event.uid}', '${event.summary.replace(/'/g, "\\'")}', '${event.startDate}')" 
+            class="px-3 py-1 bg-blue-600/20 hover:bg-blue-600/40 rounded-lg text-sm ml-2">
+            Link
+          </button>
+        </div>
+      `).join('');
+  } catch (err) {
+    document.getElementById('calendar-events-list').innerHTML = 
+      '<p class="text-gray-400">Failed to load calendar events.</p>';
+  }
+}
+
+function renderLinkedEvents() {
+  const links = currentData.linkedEvents?.links || [];
+  
+  if (links.length === 0) {
+    document.getElementById('linked-events-list').innerHTML = 
+      '<p class="text-gray-400">No linked events yet. Events will auto-link when they match your dashboard items.</p>';
+    return;
+  }
+  
+  // Sort by date (newest first)
+  const sortedLinks = links.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+  
+  document.getElementById('linked-events-list').innerHTML = sortedLinks.map(link => `
+    <div class="p-4 bg-dark-700 rounded-lg">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <h4 class="font-medium">${link.eventSummary}</h4>
+          <p class="text-sm text-gray-400">${formatDate(link.eventDate)} • ${link.calendarName}</p>
+        </div>
+        <button onclick="deleteLinkedEvent('${link.id}')" class="text-red-400 hover:text-red-300">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      
+      <p class="text-sm text-gray-500 mb-2">Linked to:</p>
+      <div class="flex flex-wrap gap-2">
+        ${link.links.map(l => `
+          <a href="#" onclick="showTab('${l.type === 'local' ? 'local' : l.type}'); return false;" 
+            class="px-3 py-1 bg-blue-600/20 rounded-full text-sm hover:bg-blue-600/40">
+            ${l.type === 'travel' ? '✈️' : l.type === 'local' ? '📍' : l.type === 'experience' ? '🗺️' : '🔗'} ${l.name}
+          </a>
+        `).join('')}
+      </div>
+      
+      ${link.notes ? `<p class="text-sm text-gray-500 mt-2">📝 ${link.notes}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+async function addCalendar() {
+  const name = document.getElementById('cal-name').value.trim();
+  const url = document.getElementById('cal-url').value.trim();
+  
+  if (!name || !url) {
+    alert('Please enter both a name and URL');
+    return;
+  }
+  
+  try {
+    await fetch('/api/calendars', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, url })
+    });
+    
+    document.getElementById('cal-name').value = '';
+    document.getElementById('cal-url').value = '';
+    
+    await loadCalendarData();
+    renderConnectedCalendars();
+    
+    // Auto-sync after adding
+    await syncCalendars();
+  } catch (err) {
+    alert('Failed to add calendar: ' + err.message);
+  }
+}
+
+async function deleteCalendar(id) {
+  if (!confirm('Remove this calendar?')) return;
+  
+  try {
+    await fetch(`/api/calendars/${id}`, { method: 'DELETE' });
+    await loadCalendarData();
+    renderConnectedCalendars();
+  } catch (err) {
+    alert('Failed to remove calendar');
+  }
+}
+
+async function syncCalendars() {
+  const btn = document.querySelector('button[onclick="syncCalendars()"]');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Syncing...';
+  btn.disabled = true;
+  
+  try {
+    const res = await fetch('/api/calendars/sync', { method: 'POST' });
+    const data = await res.json();
+    
+    await loadCalendarData();
+    renderCalendarEvents();
+    renderLinkedEvents();
+    renderConnectedCalendars();
+    
+    alert(`Synced ${data.eventsSynced} events. ${data.newLinks} new links found!`);
+  } catch (err) {
+    alert('Sync failed: ' + err.message);
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+    lucide.createIcons();
+  }
+}
+
+function manualLinkEvent(uid, summary, date) {
+  // Create a modal or simple prompt for linking
+  const types = ['travel', 'local', 'experiences'];
+  const typeNames = { travel: 'Travel Destination', local: 'Local Place', experiences: 'Experience' };
+  
+  const type = prompt(`Link "${summary}" to:\n1. Travel Destination\n2. Local Place\n3. Experience\n\nEnter number (1-3):`);
+  if (!type || type < 1 || type > 3) return;
+  
+  const selectedType = types[type - 1];
+  const items = currentData[selectedType === 'experiences' ? 'experiences' : selectedType];
+  const itemList = selectedType === 'experiences' ? items.experiences : 
+                   selectedType === 'travel' ? items.destinations : items.places;
+  
+  if (!itemList || itemList.length === 0) {
+    alert(`No ${typeNames[selectedType]} items found. Add some first!`);
+    return;
+  }
+  
+  const itemNames = itemList.map((item, i) => `${i + 1}. ${item.name || item.title}`).join('\n');
+  const itemIndex = prompt(`Select ${typeNames[selectedType]}:\n${itemNames}\n\nEnter number:`);
+  
+  if (!itemIndex || itemIndex < 1 || itemIndex > itemList.length) return;
+  
+  const selectedItem = itemList[itemIndex - 1];
+  
+  fetch('/api/linked-events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      calendarUid: uid,
+      calendarName: 'Manual',
+      eventSummary: summary,
+      eventDate: date,
+      links: [{ type: selectedType, id: selectedItem.id, name: selectedItem.name || selectedItem.title }]
+    })
+  }).then(() => {
+    loadCalendarData().then(() => renderLinkedEvents());
+  });
+}
+
+async function deleteLinkedEvent(id) {
+  if (!confirm('Remove this link?')) return;
+  
+  try {
+    await fetch(`/api/linked-events/${id}`, { method: 'DELETE' });
+    await loadCalendarData();
+    renderLinkedEvents();
+  } catch (err) {
+    alert('Failed to remove link');
+  }
+}
+
+// Update init function to load calendar data
+const originalInit = init;
+init = async function() {
+  lucide.createIcons();
+  updateTime();
+  setInterval(updateTime, 60000);
+  
+  await loadAllData();
+  await loadCalendarData();
+  showTab('whats-on');
+  initMaps();
+};
+
+// Update showTab to include calendar
+const originalShowTab = showTab;
+showTab = function(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.classList.add('hidden-tab');
+  });
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('tab-active');
+  });
+  
+  // Show selected tab
+  document.getElementById(`content-${tabName}`).classList.remove('hidden-tab');
+  document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+  
+  currentTab = tabName;
+  
+  // Render tab content
+  switch(tabName) {
+    case 'whats-on': renderWhatsOn(); break;
+    case 'travel': renderTravel(); break;
+    case 'local': renderLocal(); break;
+    case 'events': renderEvents(); break;
+    case 'bucket': renderBucket(); break;
+    case 'media': renderMedia(); break;
+    case 'discoveries': renderDiscoveries(); break;
+    case 'calendar': renderCalendarSync(); break;
+  }
+  
+  // Refresh icons
+  lucide.createIcons();
+};
+
+// ===== UTILITIES =====
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
 // Start
 init();

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,7 +38,7 @@ const generateId = () => {
 
 // Initialize data files if they don't exist
 const initializeData = () => {
-  const files = ['travel.json', 'local.json', 'events.json', 'experiences.json', 'media.json', 'discoveries.json', 'state.json', 'meta.json'];
+  const files = ['travel.json', 'local.json', 'events.json', 'experiences.json', 'media.json', 'discoveries.json', 'state.json', 'meta.json', 'calendars.json', 'linked-events.json'];
   
   files.forEach(file => {
     const filePath = path.join(DATA_DIR, file);
@@ -61,6 +62,11 @@ const initializeData = () => {
         discoveriesThatLanded: [],
         discoveriesThatFlopped: [],
         lessonsLearned: []
+      } : file === 'calendars.json' ? {
+        connected: [],
+        lastSync: null
+      } : file === 'linked-events.json' ? {
+        links: []
       } : {};
       writeData(file, defaultData);
     }
@@ -68,6 +74,123 @@ const initializeData = () => {
 };
 
 initializeData();
+
+// === Calendar Sync Functions ===
+
+// Parse iCal/ICS data
+function parseICalData(icalData) {
+  const events = [];
+  const lines = icalData.split('\n');
+  let currentEvent = null;
+  
+  for (let line of lines) {
+    line = line.trim();
+    
+    if (line === 'BEGIN:VEVENT') {
+      currentEvent = {
+        uid: '',
+        summary: '',
+        description: '',
+        location: '',
+        startDate: null,
+        endDate: null,
+        source: 'calendar'
+      };
+    } else if (line === 'END:VEVENT' && currentEvent) {
+      if (currentEvent.summary && currentEvent.startDate) {
+        events.push(currentEvent);
+      }
+      currentEvent = null;
+    } else if (currentEvent) {
+      if (line.startsWith('UID:')) {
+        currentEvent.uid = line.substring(4);
+      } else if (line.startsWith('SUMMARY:')) {
+        currentEvent.summary = line.substring(8).replace(/\\,/g, ',');
+      } else if (line.startsWith('DESCRIPTION:')) {
+        currentEvent.description = line.substring(12).replace(/\\,/g, ',').replace(/\\n/g, '\n');
+      } else if (line.startsWith('LOCATION:')) {
+        currentEvent.location = line.substring(9).replace(/\\,/g, ',');
+      } else if (line.startsWith('DTSTART')) {
+        const dateStr = line.split(':')[1];
+        currentEvent.startDate = parseICalDate(dateStr);
+      } else if (line.startsWith('DTEND')) {
+        const dateStr = line.split(':')[1];
+        currentEvent.endDate = parseICalDate(dateStr);
+      }
+    }
+  }
+  
+  return events;
+}
+
+function parseICalDate(dateStr) {
+  if (!dateStr) return null;
+  // Handle both date-only (20240208) and datetime (20240208T120000Z) formats
+  if (dateStr.includes('T')) {
+    const year = dateStr.substring(0, 4);
+    const month = dateStr.substring(4, 6);
+    const day = dateStr.substring(6, 8);
+    const hour = dateStr.substring(9, 11);
+    const minute = dateStr.substring(11, 13);
+    return new Date(`${year}-${month}-${day}T${hour}:${minute}:00`).toISOString();
+  } else {
+    const year = dateStr.substring(0, 4);
+    const month = dateStr.substring(4, 6);
+    const day = dateStr.substring(6, 8);
+    return `${year}-${month}-${day}`;
+  }
+}
+
+// Fetch calendar from URL
+async function fetchCalendar(url) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https') ? https : require('http');
+    const req = client.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    });
+    req.on('error', reject);
+    req.setTimeout(30000, () => {
+      req.destroy();
+      reject(new Error('Request timeout'));
+    });
+  });
+}
+
+// Find potential links between calendar events and dashboard items
+function findPotentialLinks(event, dashboardData) {
+  const links = [];
+  const eventName = event.summary.toLowerCase();
+  const eventLoc = event.location.toLowerCase();
+  
+  // Check travel destinations
+  const travel = dashboardData.travel || {};
+  (travel.destinations || []).forEach(dest => {
+    if (eventName.includes(dest.name.toLowerCase().split(' ')[0])) {
+      links.push({ type: 'travel', id: dest.id, name: dest.name });
+    }
+  });
+  
+  // Check local places
+  const local = dashboardData.local || {};
+  (local.places || []).forEach(place => {
+    if (eventLoc.includes(place.name.toLowerCase()) || 
+        eventName.includes(place.name.toLowerCase())) {
+      links.push({ type: 'local', id: place.id, name: place.name });
+    }
+  });
+  
+  // Check experiences
+  const experiences = dashboardData.experiences || {};
+  (experiences.experiences || []).forEach(exp => {
+    if (eventName.includes(exp.title.toLowerCase().split(' ').slice(0, 3).join(' '))) {
+      links.push({ type: 'experience', id: exp.id, name: exp.title });
+    }
+  });
+  
+  return links;
+}
 
 // === GET Routes ===
 
@@ -103,7 +226,174 @@ app.get('/api/meta', (req, res) => {
   res.json(readData('meta.json'));
 });
 
-// === POST Routes ===
+// === Calendar Routes ===
+
+// Get connected calendars
+app.get('/api/calendars', (req, res) => {
+  res.json(readData('calendars.json'));
+});
+
+// Get linked events
+app.get('/api/linked-events', (req, res) => {
+  res.json(readData('linked-events.json'));
+});
+
+// Get calendar events (merged from all connected calendars)
+app.get('/api/calendar-events', async (req, res) => {
+  try {
+    const calendars = readData('calendars.json');
+    const allEvents = [];
+    
+    for (const cal of calendars.connected || []) {
+      try {
+        const icalData = await fetchCalendar(cal.url);
+        const events = parseICalData(icalData);
+        events.forEach(e => {
+          e.calendarName = cal.name;
+          e.calendarId = cal.id;
+        });
+        allEvents.push(...events);
+      } catch (err) {
+        console.error(`Failed to fetch calendar ${cal.name}:`, err.message);
+      }
+    }
+    
+    // Sort by start date
+    allEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    
+    res.json({
+      events: allEvents,
+      lastSync: calendars.lastSync,
+      count: allEvents.length
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Sync calendars now
+app.post('/api/calendars/sync', async (req, res) => {
+  try {
+    const calendars = readData('calendars.json');
+    const dashboardData = {
+      travel: readData('travel.json'),
+      local: readData('local.json'),
+      experiences: readData('experiences.json')
+    };
+    const linkedEvents = readData('linked-events.json');
+    
+    let totalEvents = 0;
+    const newLinks = [];
+    
+    for (const cal of calendars.connected || []) {
+      try {
+        const icalData = await fetchCalendar(cal.url);
+        const events = parseICalData(icalData);
+        totalEvents += events.length;
+        
+        // Find potential links for each event
+        events.forEach(event => {
+          const links = findPotentialLinks(event, dashboardData);
+          if (links.length > 0) {
+            const existingLink = linkedEvents.links.find(l => l.calendarUid === event.uid);
+            if (!existingLink) {
+              newLinks.push({
+                id: generateId(),
+                calendarUid: event.uid,
+                calendarName: cal.name,
+                eventSummary: event.summary,
+                eventDate: event.startDate,
+                links: links,
+                createdAt: new Date().toISOString()
+              });
+            }
+          }
+        });
+      } catch (err) {
+        console.error(`Failed to sync calendar ${cal.name}:`, err.message);
+      }
+    }
+    
+    // Save new links
+    if (newLinks.length > 0) {
+      linkedEvents.links.push(...newLinks);
+      writeData('linked-events.json', linkedEvents);
+    }
+    
+    // Update last sync
+    calendars.lastSync = new Date().toISOString();
+    writeData('calendars.json', calendars);
+    
+    res.json({
+      success: true,
+      eventsSynced: totalEvents,
+      newLinks: newLinks.length,
+      lastSync: calendars.lastSync
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Add a new calendar
+app.post('/api/calendars', (req, res) => {
+  const calendars = readData('calendars.json');
+  if (!calendars.connected) calendars.connected = [];
+  
+  const newCal = {
+    id: generateId(),
+    name: req.body.name,
+    url: req.body.url,
+    type: req.body.type || 'ical',
+    color: req.body.color || '#3b82f6',
+    addedAt: new Date().toISOString()
+  };
+  
+  calendars.connected.push(newCal);
+  writeData('calendars.json', calendars);
+  
+  res.json({ success: true, id: newCal.id });
+});
+
+// Delete a calendar
+app.delete('/api/calendars/:id', (req, res) => {
+  const calendars = readData('calendars.json');
+  calendars.connected = (calendars.connected || []).filter(c => c.id !== req.params.id);
+  writeData('calendars.json', calendars);
+  res.json({ success: true });
+});
+
+// Create a manual link between calendar event and dashboard item
+app.post('/api/linked-events', (req, res) => {
+  const linkedEvents = readData('linked-events.json');
+  if (!linkedEvents.links) linkedEvents.links = [];
+  
+  const newLink = {
+    id: generateId(),
+    calendarUid: req.body.calendarUid,
+    calendarName: req.body.calendarName,
+    eventSummary: req.body.eventSummary,
+    eventDate: req.body.eventDate,
+    links: req.body.links || [],
+    notes: req.body.notes || '',
+    createdAt: new Date().toISOString()
+  };
+  
+  linkedEvents.links.push(newLink);
+  writeData('linked-events.json', linkedEvents);
+  
+  res.json({ success: true, id: newLink.id });
+});
+
+// Delete a link
+app.delete('/api/linked-events/:id', (req, res) => {
+  const linkedEvents = readData('linked-events.json');
+  linkedEvents.links = (linkedEvents.links || []).filter(l => l.id !== req.params.id);
+  writeData('linked-events.json', linkedEvents);
+  res.json({ success: true });
+});
+
+// === POST Routes (Original) ===
 
 app.post('/api/travel', (req, res) => {
   const data = readData('travel.json');
@@ -178,7 +468,7 @@ app.post('/api/state', (req, res) => {
   res.json({ success: true });
 });
 
-// === PATCH Routes ===
+// === PATCH Routes (Original) ===
 
 app.patch('/api/travel/:id', (req, res) => {
   const data = readData('travel.json');
