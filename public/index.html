@@ -197,6 +197,9 @@
         <button onclick="showTab('calendar')" id="tab-calendar" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors">
           📅 Calendar Sync
         </button>
+        <button onclick="showTab('moncler')" id="tab-moncler" class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap hover:text-blue-400 transition-colors text-amber-400">
+          🧥 Moncler Tracker
+        </button>
       </div>
     </nav>
   </header>
@@ -563,6 +566,83 @@
           </p>
           <div id="linked-events-list" class="space-y-3">
             <p class="text-gray-400">No linked events yet. Events will auto-link when they match your dashboard items.</p>
+          </div>
+        </section>
+      </div>
+      <!-- Moncler Tracker Tab -->
+      <div id="tab-content-moncler" class="tab-content hidden-tab">
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-2xl font-bold flex items-center gap-2">
+                🧥 Moncler Jacket Tracker
+                <span class="text-sm font-normal text-gray-400">Live from SSENSE</span>
+              </h2>
+              <p class="text-sm text-gray-400 mt-1">
+                Tracking <span id="moncler-total-items" class="text-blue-400 font-bold">6</span> jackets | 
+                Last updated: <span id="moncler-last-updated" class="text-gray-300">--</span>
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="refreshMonclerTracker()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                Refresh
+              </button>
+            </div>
+          </div>
+          
+          <!-- Sale Alert Banner -->
+          <div class="bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-500/30 rounded-lg p-4 mb-6">
+            <div class="flex items-start gap-3">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 mt-0.5"></i>
+              <div>
+                <h3 class="font-semibold text-amber-400">End of Winter Sales Expected</h3>
+                <p class="text-sm text-gray-300 mt-1">
+                  Based on historical data: SSENSE private sales typically offer <strong>up to 50% off</strong> in March-April. 
+                  You're signed up for email alerts at <span class="text-blue-400">stevenyjsongAI@gmail.com</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Price Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="card p-4 text-center">
+              <p class="text-xs text-gray-400 uppercase tracking-wide">Items Tracked</p>
+              <p id="moncler-stat-count" class="text-2xl font-bold text-blue-400">--</p>
+            </div>
+            <div class="card p-4 text-center">
+              <p class="text-xs text-gray-400 uppercase tracking-wide">Avg Price</p>
+              <p id="moncler-stat-avg" class="text-2xl font-bold">--</p>
+            </div>
+            <div class="card p-4 text-center">
+              <p class="text-xs text-gray-400 uppercase tracking-wide">Price Range</p>
+              <p id="moncler-stat-range" class="text-lg font-bold">--</p>
+            </div>
+            <div class="card p-4 text-center">
+              <p class="text-xs text-gray-400 uppercase tracking-wide">In Stock</p>
+              <p id="moncler-stat-stock" class="text-2xl font-bold text-green-400">--</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tracked Items Grid -->
+        <div id="moncler-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Items loaded dynamically -->
+          <div class="card p-8 text-center text-gray-400">
+            <i data-lucide="loader" class="w-8 h-8 mx-auto mb-3 animate-spin"></i>
+            Loading Moncler data from SSENSE...
+          </div>
+        </div>
+        
+        <!-- Historical Sales Section -->
+        <section class="card p-6 mt-6">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="history" class="w-5 h-5 text-purple-400"></i>
+            Historical Sale Data
+          </h3>
+          <div id="moncler-historical-sales" class="space-y-3">
+            <!-- Loaded dynamically -->
           </div>
         </section>
       </div>

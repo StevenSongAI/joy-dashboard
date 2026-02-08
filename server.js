@@ -206,6 +206,82 @@ app.get('/api/travel', (req, res) => {
   res.json(readData('travel.json'));
 });
 
+// Moncler Tracker Routes
+app.get('/api/moncler-tracker', (req, res) => {
+  res.json(readData('moncler-tracker.json'));
+});
+
+// Refresh Moncler data from SSENSE (manual trigger)
+app.post('/api/moncler-tracker/refresh', async (req, res) => {
+  try {
+    // In production, this would scrape SSENSE again
+    // For now, just update the lastUpdated timestamp
+    const tracker = readData('moncler-tracker.json');
+    tracker.lastUpdated = new Date().toISOString();
+    writeData('moncler-tracker.json', tracker);
+    
+    res.json({ 
+      success: true, 
+      message: 'Tracker refreshed. Real-time SSENSE scraping would happen here.',
+      lastUpdated: tracker.lastUpdated
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Add item to Moncler tracker
+app.post('/api/moncler-tracker/items', (req, res) => {
+  const tracker = readData('moncler-tracker.json');
+  if (!tracker.trackedItems) tracker.trackedItems = [];
+  
+  const newItem = {
+    id: req.body.id || generateId(),
+    name: req.body.name,
+    price: req.body.price,
+    currency: req.body.currency || 'CAD',
+    url: req.body.url,
+    image: req.body.image,
+    inStock: req.body.inStock || true,
+    category: req.body.category || 'Jacket',
+    addedAt: new Date().toISOString(),
+    priceHistory: [{ price: req.body.price, date: new Date().toISOString() }],
+    targetPrice: req.body.targetPrice,
+    alertOnSale: req.body.alertOnSale || true
+  };
+  
+  tracker.trackedItems.push(newItem);
+  writeData('moncler-tracker.json', tracker);
+  
+  res.json({ success: true, id: newItem.id });
+});
+
+// Update tracked item
+app.patch('/api/moncler-tracker/items/:id', (req, res) => {
+  const tracker = readData('moncler-tracker.json');
+  const item = tracker.trackedItems?.find(i => i.id === req.params.id);
+  
+  if (item) {
+    // If price changed, add to history
+    if (req.body.price && req.body.price !== item.price) {
+      item.priceHistory.push({ price: req.body.price, date: new Date().toISOString() });
+    }
+    Object.assign(item, req.body);
+    writeData('moncler-tracker.json', tracker);
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Item not found' });
+  }
+});
+
+// Delete tracked item
+app.delete('/api/moncler-tracker/items/:id', (req, res) => {
+  const tracker = readData('moncler-tracker.json');
+  tracker.trackedItems = (tracker.trackedItems || []).filter(i => i.id !== req.params.id);
+  writeData('moncler-tracker.json', tracker);
+  res.json({ success: true });
+});
+
 app.get('/api/local', (req, res) => {
   res.json(readData('local.json'));
 });

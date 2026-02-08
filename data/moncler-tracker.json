@@ -1,0 +1,142 @@
+{
+  "trackerName": "Moncler Jacket Tracker",
+  "description": "Track Moncler jacket prices and sales from SSENSE",
+  "source": "SSENSE",
+  "sourceUrl": "https://www.ssense.com/en-ca/men/designers/moncler/jackets-coats",
+  "lastUpdated": "2026-02-08T21:40:35.615Z",
+  "saleSeason": "End of Winter - Sales Expected: March-April 2026",
+  "historicalSales": [
+    {
+      "date": "2025-11",
+      "source": "SSENSE Private Sale",
+      "discount": "Up to 50% off",
+      "notes": "Historical data from RedFlagDeals"
+    },
+    {
+      "date": "2025-03",
+      "source": "Sporting Life",
+      "discount": "50% + 10% off",
+      "notes": "End of season clearance"
+    }
+  ],
+  "trackedItems": [
+    {
+      "id": "18739981",
+      "name": "Black Atria Diamond-Quilted Shirt Down Jacket",
+      "price": 2405,
+      "currency": "CAD",
+      "url": "https://www.ssense.com/men/product/moncler/black-atria-diamond-quilted-shirt-down-jacket/18739981",
+      "image": "https://img.ssensemedia.com/images/261111M178001_1/moncler-black-atria-diamond-quilted-shirt-down-jacket.jpg",
+      "inStock": true,
+      "category": "Down Jacket",
+      "addedAt": "2026-02-08T21:40:35.615Z",
+      "priceHistory": [
+        { "price": 2405, "date": "2026-02-08T21:40:35.615Z" }
+      ],
+      "targetPrice": 1800,
+      "alertOnSale": true
+    },
+    {
+      "id": "18740031",
+      "name": "Black Vega Hooded Short Down Jacket",
+      "price": 2865,
+      "currency": "CAD",
+      "url": "https://www.ssense.com/men/product/moncler/black-vega-hooded-short-down-jacket/18740031",
+      "image": "https://img.ssensemedia.com/images/261111M178002_1/moncler-black-vega-hooded-short-down-jacket.jpg",
+      "inStock": true,
+      "category": "Down Jacket",
+      "addedAt": "2026-02-08T21:40:35.615Z",
+      "priceHistory": [
+        { "price": 2865, "date": "2026-02-08T21:40:35.615Z" }
+      ],
+      "targetPrice": 2200,
+      "alertOnSale": true
+    },
+    {
+      "id": "18742071",
+      "name": "Gray Selves Short Down Jacket",
+      "price": 2220,
+      "currency": "CAD",
+      "url": "https://www.ssense.com/men/product/moncler/gray-selves-short-down-jacket/18742071",
+      "image": "https://img.ssensemedia.com/images/261111M178017_1/moncler-gray-selves-short-down-jacket.jpg",
+      "inStock": true,
+      "category": "Down Jacket",
+      "addedAt": "2026-02-08T21:40:35.615Z",
+      "priceHistory": [
+        { "price": 2220, "date": "2026-02-08T21:40:35.615Z" }
+      ],
+      "targetPrice": 1700,
+      "alertOnSale": true
+    },
+    {
+      "id": "18742021",
+      "name": "Black Mistral Teddy Short Down Jacket",
+      "price": 2590,
+      "currency": "CAD",
+      "url": "https://www.ssense.com/men/product/moncler/black-mistral-teddy-short-down-jacket/18742021",
+      "image": "https://img.ssensemedia.com/images/261111M178015_1/moncler-black-mistral-teddy-short-down-jacket.jpg",
+      "inStock": true,
+      "category": "Down Jacket",
+      "addedAt": "2026-02-08T21:40:35.615Z",
+      "priceHistory": [
+        { "price": 2590, "date": "2026-02-08T21:40:35.615Z" }
+      ],
+      "targetPrice": 2000,
+      "alertOnSale": true
+    },
+    {
+      "id": "17792851",
+      "name": "Black Serfanto Hooded Short Down Jacket",
+      "price": 3555,
+      "currency": "CAD",
+      "url": "https://www.ssense.com/men/product/moncler/black-serfanto-hooded-short-down-jacket/17792851",
+      "image": "https://img.ssensemedia.com/images/252111M178022_1/moncler-black-serfanto-hooded-short-down-jacket.jpg",
+      "inStock": true,
+      "category": "Premium Down Jacket",
+      "addedAt": "2026-02-08T21:40:35.615Z",
+      "priceHistory": [
+        { "price": 3555, "date": "2026-02-08T21:40:35.615Z" }
+      ],
+      "targetPrice": 2800,
+      "alertOnSale": true
+    },
+    {
+      "id": "18067981",
+      "name": "Green Maya 70 Hooded Short Down Jacket",
+      "price": 3465,
+      "currency": "CAD",
+      "url": "https://www.ssense.com/men/product/moncler/green-maya-70-hooded-short-down-jacket/18067981",
+      "image": "https://img.ssensemedia.com/images/252111M178079_1/moncler-green-maya-70-hooded-short-down-jacket.jpg",
+      "inStock": true,
+      "category": "Classic Maya",
+      "addedAt": "2026-02-08T21:40:35.615Z",
+      "priceHistory": [
+        { "price": 3465, "date": "2026-02-08T21:40:35.615Z" }
+      ],
+      "targetPrice": 2600,
+      "alertOnSale": true
+    }
+  ],
+  "priceStats": {
+    "highestPrice": 3555,
+    "lowestPrice": 1260,
+    "averagePrice": 2460,
+    "totalItems": 120,
+    "inStockItems": 120
+  },
+  "alerts": [
+    {
+      "id": "alert-1",
+      "type": "sale",
+      "message": "End of winter sales expected March-April 2026",
+      "priority": "medium",
+      "createdAt": "2026-02-08T21:40:35.615Z"
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": "daily",
+    "emailAlerts": true,
+    "priceDropThreshold": 20
+  }
+}

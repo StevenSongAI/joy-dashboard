@@ -68,6 +68,8 @@ function showTab(tabName) {
     case 'bucket': renderBucket(); break;
     case 'media': renderMedia(); break;
     case 'discoveries': renderDiscoveries(); break;
+    case 'calendar': renderCalendar(); break;
+    case 'moncler': renderMonclerTracker(); break;
   }
   
   // Refresh icons
@@ -1106,6 +1108,193 @@ function formatDate(dateStr) {
     year: 'numeric'
   });
 }
+
+// ===== MONCLER TRACKER =====
+let monclerData = null;
+
+async function renderMonclerTracker() {
+  try {
+    // Load data if not already loaded
+    if (!monclerData) {
+      const res = await fetch('/api/moncler-tracker');
+      monclerData = await res.json();
+    }
+    
+    // Update stats
+    document.getElementById('moncler-last-updated').textContent = new Date(monclerData.lastUpdated).toLocaleString();
+    document.getElementById('moncler-stat-count').textContent = monclerData.trackedItems?.length || 0;
+    document.getElementById('moncler-total-items').textContent = monclerData.trackedItems?.length || 0;
+    
+    if (monclerData.priceStats) {
+      document.getElementById('moncler-stat-avg').textContent = `$${Math.round(monclerData.priceStats.averagePrice || 0).toLocaleString()}`;
+      document.getElementById('moncler-stat-range').textContent = `$${(monclerData.priceStats.lowestPrice || 0).toLocaleString()} - $${(monclerData.priceStats.highestPrice || 0).toLocaleString()}`;
+      document.getElementById('moncler-stat-stock').textContent = monclerData.priceStats.inStockItems || 0;
+    }
+    
+    // Render tracked items
+    const grid = document.getElementById('moncler-items-grid');
+    if (monclerData.trackedItems && monclerData.trackedItems.length > 0) {
+      grid.innerHTML = monclerData.trackedItems.map(item => `
+        <div class="card overflow-hidden group">
+          <div class="aspect-square bg-dark-700 relative overflow-hidden">
+            <img src="${item.image}" alt="${item.name}" 
+                 class="w-full h-full object-cover transition-transform group-hover:scale-105"
+                 onerror="this.src='https://via.placeholder.com/400x400?text=Moncler'">
+            ${item.inStock ? 
+              '<span class="absolute top-2 right-2 px-2 py-1 bg-green-500/80 text-xs font-bold rounded">IN STOCK</span>' :
+              '<span class="absolute top-2 right-2 px-2 py-1 bg-red-500/80 text-xs font-bold rounded">OUT OF STOCK</span>'
+            }
+          </div>
+          <div class="p-4">
+            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">${item.category}</p>
+            <h3 class="font-bold text-sm mb-2 line-clamp-2">${item.name}</h3>
+            <div class="flex items-center justify-between">
+              <p class="text-lg font-bold text-blue-400">$${item.price.toLocaleString()} ${item.currency}</p>
+              ${item.targetPrice ? `<p class="text-xs text-gray-400">Target: $${item.targetPrice.toLocaleString()}</p>` : ''}
+            </div>
+            <div class="mt-3 flex gap-2">
+              <a href="${item.url}" target="_blank" 
+                 class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded text-center text-sm font-medium transition-colors">
+                View on SSENSE
+              </a>
+            </div>
+            ${item.priceHistory && item.priceHistory.length > 1 ? `
+              <div class="mt-2 text-xs text-gray-400">
+                Price history: ${item.priceHistory.length} records
+                ${item.priceHistory[item.priceHistory.length - 1].price < item.priceHistory[0].price ? 
+                  '<span class="text-green-400">↓ Dropped</span>' : ''}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    } else {
+      grid.innerHTML = `
+        <div class="card p-8 text-center text-gray-400 col-span-full">
+          <i data-lucide="shopping-bag" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+          <p>No items being tracked yet.</p>
+        </div>
+      `;
+    }
+    
+    // Render historical sales
+    const historyDiv = document.getElementById('moncler-historical-sales');
+    if (monclerData.historicalSales && monclerData.historicalSales.length > 0) {
+      historyDiv.innerHTML = monclerData.historicalSales.map(sale => `
+        <div class="flex items-center gap-4 p-3 bg-dark-700 rounded-lg">
+          <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+            <i data-lucide="tag" class="w-5 h-5 text-purple-400"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-medium">${sale.source} — ${sale.discount}</p>
+            <p class="text-sm text-gray-400">${sale.date} • ${sale.notes}</p>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      historyDiv.innerHTML = '<p class="text-gray-400">No historical data available.</p>';
+    }
+    
+  } catch (err) {
+    console.error('Failed to load Moncler tracker:', err);
+    document.getElementById('moncler-items-grid').innerHTML = `
+      <div class="card p-8 text-center text-red-400 col-span-full">
+        <i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-3"></i>
+        <p>Failed to load tracker data. Try refreshing.</p>
+      </div>
+    `;
+  }
+  
+  lucide.createIcons();
+}
+
+async function refreshMonclerTracker() {
+  const btn = document.querySelector('button[onclick="refreshMonclerTracker()"]');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Refreshing...';
+  }
+  
+  try {
+    // In a real implementation, this would trigger a server-side scrape
+    const res = await fetch('/api/moncler-tracker/refresh', { method: 'POST' });
+    const result = await res.json();
+    
+    // Reload data
+    monclerData = null;
+    await renderMonclerTracker();
+    
+    // Show success
+    alert(`Tracker refreshed! ${result.message}`);
+  } catch (err) {
+    alert('Failed to refresh. Please try again.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i> Refresh';
+      lucide.createIcons();
+    }
+  }
+}
+
+// Update init function to load Moncler data
+const originalInit2 = init;
+init = async function() {
+  lucide.createIcons();
+  updateTime();
+  setInterval(updateTime, 60000);
+  
+  await loadAllData();
+  await loadCalendarData();
+  
+  // Preload Moncler data
+  try {
+    const res = await fetch('/api/moncler-tracker');
+    monclerData = await res.json();
+  } catch (e) {
+    console.log('Moncler data not loaded yet');
+  }
+  
+  showTab('whats-on');
+  initMaps();
+};
+
+// Update showTab to include Moncler
+const originalShowTab2 = showTab;
+showTab = function(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.classList.add('hidden-tab');
+  });
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('tab-active');
+  });
+  
+  // Show selected tab
+  const tabContent = document.getElementById(`tab-content-${tabName}`) || document.getElementById(`content-${tabName}`);
+  const tabBtn = document.getElementById(`tab-${tabName}`);
+  
+  if (tabContent) tabContent.classList.remove('hidden-tab');
+  if (tabBtn) tabBtn.classList.add('tab-active');
+  
+  currentTab = tabName;
+  
+  // Render tab content
+  switch(tabName) {
+    case 'whats-on': renderWhatsOn(); break;
+    case 'travel': renderTravel(); break;
+    case 'local': renderLocal(); break;
+    case 'events': renderEvents(); break;
+    case 'bucket': renderBucket(); break;
+    case 'media': renderMedia(); break;
+    case 'discoveries': renderDiscoveries(); break;
+    case 'calendar': renderCalendarSync(); break;
+    case 'moncler': renderMonclerTracker(); break;
+  }
+  
+  // Refresh icons
+  lucide.createIcons();
+};
 
 // Start
 init();
