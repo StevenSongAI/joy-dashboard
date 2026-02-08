@@ -211,6 +211,28 @@ app.get('/api/moncler-tracker', (req, res) => {
   res.json(readData('moncler-tracker.json'));
 });
 
+// Bahamas Deals Tracker Routes
+app.get('/api/bahamas-deals', (req, res) => {
+  res.json(readData('bahamas-deals.json'));
+});
+
+// Refresh Bahamas deals (manual trigger)
+app.post('/api/bahamas-deals/refresh', async (req, res) => {
+  try {
+    const tracker = readData('bahamas-deals.json');
+    tracker.monitoring.lastCheck = new Date().toISOString();
+    writeData('bahamas-deals.json', tracker);
+    
+    res.json({ 
+      success: true, 
+      message: 'Bahamas deals tracker refreshed.',
+      lastCheck: tracker.monitoring.lastCheck
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Refresh Moncler data from SSENSE (manual trigger)
 app.post('/api/moncler-tracker/refresh', async (req, res) => {
   try {

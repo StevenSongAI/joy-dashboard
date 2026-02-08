@@ -1,0 +1,70 @@
+{
+  "trackerName": "Bahamas Atlantis Deal Hunter",
+  "description": "Track vacation packages to Atlantis Paradise Island (The Cove or The Reef) from Toronto",
+  "targetDates": "April or May 2026",
+  "targetPrices": {
+    "theCove": {"max": 3300, "currency": "CAD", "includes": "flights+hotel"},
+    "theReef": {"min": 2900, "max": 3100, "currency": "CAD", "includes": "flights+hotel"}
+  },
+  "departureCity": "Toronto (YYZ)",
+  "lastUpdated": "2026-02-08T21:55:00Z",
+  "bookingStatus": "not-booked",
+  "activelySearching": true,
+  
+  "currentFindings": [
+    {
+      "date": "2026-02-08",
+      "source": "WestJet Vacations",
+      "resort": "The Coral at Atlantis",
+      "dates": "Feb 25, 2026 (6 days)",
+      "departure": "Calgary",
+      "originalPrice": 3423,
+      "salePrice": 2755,
+      "discount": "19% off",
+      "notes": "European Plan (not all-inclusive). Feb dates - not target month."
+    },
+    {
+      "date": "2026-02-08",
+      "source": "WestJet Vacations",
+      "resort": "The Reef Atlantis",
+      "dates": "Feb 25, 2026 (6 days)",
+      "departure": "Calgary",
+      "originalPrice": 4346,
+      "salePrice": 3554,
+      "discount": "18% off",
+      "notes": "European Plan. Price is ABOVE target range ($2900-3100). Feb dates."
+    }
+  ],
+  
+  "dealSources": [
+    {"name": "WestJet Vacations", "url": "https://www.westjetvacations.com/en/destinations/bahamas", "active": true},
+    {"name": "Air Canada Vacations", "url": "https://www.aircanadavacations.com/en/destinations/bahamas", "active": true},
+    {"name": "RedFlagDeals - Bahamas", "url": "https://forums.redflagdeals.com/tags/bahamas/", "active": true},
+    {"name": "RedFlagDeals - Atlantis", "url": "https://forums.redflagdeals.com/tags/atlantis/", "active": true},
+    {"name": "Atlantis Direct", "url": "https://www.atlantis.com/special-offers", "active": true}
+  ],
+  
+  "monitoring": {
+    "checkFrequency": "daily",
+    "lastCheck": "2026-02-08T21:55:00Z",
+    "nextCheck": "2026-02-09T21:00:00Z",
+    "alertOnPriceDrop": true,
+    "alertThreshold": 3000
+  },
+  
+  "notes": [
+    "The Cove = luxury, adults-focused, quieter",
+    "The Reef = residential-style, full kitchens, family-friendly",
+    "Both include access to all Atlantis amenities (Aquaventure, Marine Habitat, etc.)",
+    "European Plan = room only, not all-inclusive",
+    "Best booking window: 4-8 weeks out for package deals"
+  ],
+  
+  "tasks": [
+    "Search for April/May 2026 dates from Toronto",
+    "Monitor WestJet Vacations weekly for new deals",
+    "Check RedFlagDeals forums daily",
+    "Sign up for Atlantis email alerts",
+    "Compare Air Canada Vacations pricing"
+  ]
+}

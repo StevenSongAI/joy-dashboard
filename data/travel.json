@@ -2,6 +2,44 @@
   "destinations": [
     {
       "id": "dest-001",
+      "name": "Bahamas — Atlantis Paradise Island",
+      "type": "international",
+      "status": "actively-planning",
+      "summary": "Atlantis resort vacation. Looking for best deals on The Cove ($3300 CAD target) or The Reef ($2900-3100 CAD). All-inclusive flights + hotel.",
+      "targetDates": "April or May 2026",
+      "estimatedBudget": {
+        "flights": "Included in package",
+        "accommodation": "The Cove: $3300 CAD target | The Reef: $2900-3100 CAD target",
+        "daily": "~$150-200 CAD for food/activities",
+        "total": "$3300-3500 CAD all-inclusive"
+      },
+      "highlights": [
+        "Aquaventure water park",
+        "Marine Habitat with 50,000 sea creatures",
+        "Dolphin Cay interactions",
+        "Fine dining at Nobu, Olives, Café Martinique",
+        "The Cove adults-only pool",
+        "Pink sand beaches of Harbour Island (day trip)"
+      ],
+      "practicalNotes": [
+        "The Cove = luxury, quieter, adults-focused",
+        "The Reef = residential-style suites, family-friendly, full kitchens",
+        "Both include access to all Atlantis amenities",
+        "Watch for WestJet Vacations and Air Canada Vacations deals",
+        "Target booking window: 4-8 weeks out for best prices"
+      ],
+      "coordinates": {"lat": 25.0835, "lng": -77.3231},
+      "tags": ["caribbean", "beach", "luxury", "romance", "actively-planning"],
+      "addedAt": "2026-02-08",
+      "interest": "high",
+      "bookingStatus": "not-booked",
+      "dealTargets": {
+        "cove": {"maxPrice": 3300, "currency": "CAD", "includes": "flights+hotel"},
+        "reef": {"maxPrice": 3100, "minPrice": 2900, "currency": "CAD", "includes": "flights+hotel"}
+      }
+    },
+    {
+      "id": "dest-002",
       "name": "Japan — Tokyo + Kyoto",
       "type": "international",
       "status": "dreaming",
