@@ -77,6 +77,52 @@ function showTab(tabName) {
 }
 
 // ===== TAB 1: WHAT'S ON =====
+
+// Helper: Smart recommendations based on time and context
+function getSmartRecommendations(places, hour, isWeekend) {
+  if (!places || places.length === 0) return [];
+  
+  // Define time-based preferences
+  let preferredTypes = [];
+  if (hour >= 5 && hour < 11) {
+    preferredTypes = ['cafe'];
+  } else if (hour >= 11 && hour < 15) {
+    preferredTypes = ['restaurant', 'cafe'];
+  } else if (hour >= 15 && hour < 17) {
+    preferredTypes = ['cafe', 'bar'];
+  } else if (hour >= 17 && hour < 22) {
+    preferredTypes = ['restaurant', 'bar'];
+  } else {
+    preferredTypes = ['bar'];
+  }
+  
+  // Filter and sort places
+  const scored = places.map(place => {
+    let score = place.agentConfidence || 3;
+    
+    // Boost if type matches time of day
+    if (preferredTypes.includes(place.type)) score += 2;
+    
+    // Boost high-quality spots
+    if (place.rating >= 4.5) score += 1;
+    if (place.agentConfidence >= 5) score += 1;
+    
+    // Boost weekend-appropriate spots on weekends
+    if (isWeekend && place.bestFor?.includes('weekend')) score += 1;
+    
+    // Slight randomization to avoid always showing same spots
+    score += Math.random() * 0.5;
+    
+    return { place, score };
+  });
+  
+  // Sort by score and return top 2
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2)
+    .map(item => item.place);
+}
+
 function renderWhatsOn() {
   const now = new Date();
   const hour = now.getHours();
@@ -88,9 +134,11 @@ function renderWhatsOn() {
     '<i data-lucide="sun" class="w-6 h-6 text-yellow-500 inline mr-2"></i>This Weekend' : 
     '<i data-lucide="moon" class="w-6 h-6 text-blue-500 inline mr-2"></i>Tonight';
   
-  // Tonight content - show local recommendations
+  // Tonight content - smart local recommendations
   const local = currentData.local?.places || [];
-  const tonightHTML = local.slice(0, 2).map(place => `
+  const recommended = getSmartRecommendations(local, hour, isWeekend);
+  
+  const tonightHTML = recommended.map(place => `
     <div class="flex items-start gap-4 p-4 bg-dark-700 rounded-lg">
       <div class="w-12 h-12 bg-dark-600 rounded-lg flex items-center justify-center">
         <i data-lucide="map-pin" class="w-6 h-6 text-blue-500"></i>
@@ -99,6 +147,7 @@ function renderWhatsOn() {
         <h3 class="font-bold">${place.name}</h3>
         <p class="text-sm text-gray-400">${place.type} • ${place.area}</p>
         <p class="text-sm mt-1">${place.summary}</p>
+        ${place.whySteven ? `<p class="text-xs text-blue-400 mt-2">💡 ${place.whySteven}</p>` : ''}
       </div>
     </div>
   `).join('') || '<p class="text-gray-400">No recommendations yet. Check back soon!</p>';
