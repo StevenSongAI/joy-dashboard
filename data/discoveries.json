@@ -1,36 +1,4 @@
 {
-  "discoveries": [
-    {
-      "id": "disc-001",
-      "title": "The Tuning Fork — Hidden Speakeasy in Hamilton",
-      "category": "local",
-      "summary": "Unmarked door on James St North. Cocktail bar with live jazz on Thursdays. Reservation recommended.",
-      "whySteven": "20 min from Burlington. The kind of place you'd never find on Google. Great for a spontaneous Thursday night.",
-      "link": null,
-      "confidence": 5,
-      "tags": ["bar", "hamilton", "speakeasy", "jazz", "nightlife"],
-      "source": "Local food blog research",
-      "status": "new",
-      "stevenRating": null,
-      "addedAt": "2026-02-08"
-    },
-    {
-      "id": "disc-002",
-      "title": "The Pilgrim's Feast Table — All-You-Can-Eat Sushi",
-      "category": "food",
-      "summary": "Korean-owned AYCE sushi spot in Burlington. Better quality than typical buffet places. Great value.",
-      "whySteven": "AYCE sushi is usually terrible. This is the exception. Good for when you want variety.",
-      "link": null,
-      "confidence": 4,
-      "tags": ["sushi", "ayce", "burlington", "value"],
-      "source": "Local recommendations",
-      "status": "new",
-      "stevenRating": null,
-      "addedAt": "2026-02-08"
-    }
-  ],
-  "weeklyHighlight": {
-    "id": "disc-001",
-    "reason": "Best find this week — the kind of hidden gem you can't Google"
-  }
+  "discoveries": [],
+  "weeklyHighlight": null
 }
