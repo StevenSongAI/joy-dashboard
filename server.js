@@ -661,6 +661,92 @@ app.patch('/api/discoveries/:id', (req, res) => {
   }
 });
 
+// === DELETE Routes ===
+
+app.delete('/api/discoveries/:id', (req, res) => {
+  const data = readData('discoveries.json');
+  const initialCount = data.discoveries?.length || 0;
+  data.discoveries = (data.discoveries || []).filter(d => d.id !== req.params.id);
+  const deleted = initialCount > data.discoveries.length;
+  
+  if (deleted) {
+    writeData('discoveries.json', data);
+    res.json({ success: true, message: 'Discovery deleted' });
+  } else {
+    res.status(404).json({ error: 'Discovery not found' });
+  }
+});
+
+app.delete('/api/local/:id', (req, res) => {
+  const data = readData('local.json');
+  const initialCount = data.places?.length || 0;
+  data.places = (data.places || []).filter(p => p.id !== req.params.id);
+  const deleted = initialCount > data.places.length;
+  
+  if (deleted) {
+    writeData('local.json', data);
+    res.json({ success: true, message: 'Place deleted' });
+  } else {
+    res.status(404).json({ error: 'Place not found' });
+  }
+});
+
+app.delete('/api/travel/:id', (req, res) => {
+  const data = readData('travel.json');
+  const initialCount = data.destinations?.length || 0;
+  data.destinations = (data.destinations || []).filter(d => d.id !== req.params.id);
+  const deleted = initialCount > data.destinations.length;
+  
+  if (deleted) {
+    writeData('travel.json', data);
+    res.json({ success: true, message: 'Destination deleted' });
+  } else {
+    res.status(404).json({ error: 'Destination not found' });
+  }
+});
+
+app.delete('/api/events/:id', (req, res) => {
+  const data = readData('events.json');
+  const initialCount = data.events?.length || 0;
+  data.events = (data.events || []).filter(e => e.id !== req.params.id);
+  const deleted = initialCount > data.events.length;
+  
+  if (deleted) {
+    writeData('events.json', data);
+    res.json({ success: true, message: 'Event deleted' });
+  } else {
+    res.status(404).json({ error: 'Event not found' });
+  }
+});
+
+app.delete('/api/media/:id', (req, res) => {
+  const data = readData('media.json');
+  const initialCount = data.items?.length || 0;
+  data.items = (data.items || []).filter(i => i.id !== req.params.id);
+  const deleted = initialCount > data.items.length;
+  
+  if (deleted) {
+    writeData('media.json', data);
+    res.json({ success: true, message: 'Media item deleted' });
+  } else {
+    res.status(404).json({ error: 'Media item not found' });
+  }
+});
+
+app.delete('/api/experiences/:id', (req, res) => {
+  const data = readData('experiences.json');
+  const initialCount = data.experiences?.length || 0;
+  data.experiences = (data.experiences || []).filter(e => e.id !== req.params.id);
+  const deleted = initialCount > data.experiences.length;
+  
+  if (deleted) {
+    writeData('experiences.json', data);
+    res.json({ success: true, message: 'Experience deleted' });
+  } else {
+    res.status(404).json({ error: 'Experience not found' });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
