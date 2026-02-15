@@ -183,8 +183,8 @@ function renderWhatsOn() {
         <span class="category-badge bg-orange-600">${latest.category}</span>
         <span class="confidence-stars">${'⭐'.repeat(latest.confidence || 3)}</span>
       </div>
-      <h3 class="text-lg font-bold mb-2">${latest.title}</h3>
-      <p class="text-gray-300 mb-3">${latest.summary}</p>
+      <h3 class="text-lg font-bold mb-2">${latest.title || latest.headline || 'Untitled'}</h3>
+      <p class="text-gray-300 mb-3">${latest.summary || latest.description || ''}</p>
       <p class="text-sm text-blue-400">${latest.whySteven || ''}</p>
     </div>
   ` : '<p class="text-gray-400">No discoveries yet.</p>';
@@ -660,14 +660,17 @@ function renderDiscoveries() {
   if (highlight) {
     const disc = discoveries.find(d => d.id === highlight.id);
     if (disc) {
+      // Handle both old format (title/summary) and new format (headline/description)
+      const title = disc.title || disc.headline || 'Untitled';
+      const summary = disc.summary || disc.description || '';
       document.getElementById('weekly-highlight').innerHTML = `
         <div class="p-4 bg-dark-700 rounded-lg">
           <div class="flex items-center gap-2 mb-2">
             <span class="category-badge bg-orange-600">${disc.category}</span>
             <span class="confidence-stars">${'⭐'.repeat(disc.confidence || 3)}</span>
           </div>
-          <h3 class="text-lg font-bold mb-2">${disc.title}</h3>
-          <p class="text-gray-300 mb-2">${disc.summary}</p>
+          <h3 class="text-lg font-bold mb-2">${title}</h3>
+          <p class="text-gray-300 mb-2">${summary}</p>
           <p class="text-sm text-orange-400 mb-3">${highlight.reason}</p>
           <p class="text-sm text-blue-400">${disc.whySteven || ''}</p>
         </div>
@@ -682,7 +685,11 @@ function renderDiscoveries() {
 function renderDiscoveriesList(discoveries) {
   document.getElementById('discoveries-list').innerHTML = discoveries
     .sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt))
-    .map(disc => `
+    .map(disc => {
+      // Handle both old format (title/summary) and new format (headline/description)
+      const title = disc.title || disc.headline || 'Untitled';
+      const summary = disc.summary || disc.description || '';
+      return `
     <div class="card p-4">
       <div class="flex items-start justify-between mb-2">
         <div class="flex items-center gap-2">
@@ -691,8 +698,8 @@ function renderDiscoveriesList(discoveries) {
         </div>
         <span class="text-xs text-gray-500">${formatRelativeTime(disc.addedAt)}</span>
       </div>
-      <h4 class="font-bold mb-1">${disc.title}</h4>
-      <p class="text-sm text-gray-300">${disc.summary}</p>
+      <h4 class="font-bold mb-1">${title}</h4>
+      <p class="text-sm text-gray-300">${summary}</p>
       <p class="text-sm text-blue-400 mt-2">${disc.whySteven || ''}</p>
       <div class="flex gap-2 mt-3">
         <button onclick="updateDiscoveryReaction('${disc.id}', 'loved')" class="reaction-btn bg-red-600/20">❤️ Loved</button>
@@ -700,7 +707,8 @@ function renderDiscoveriesList(discoveries) {
         <button onclick="updateDiscoveryReaction('${disc.id}', 'pass')" class="reaction-btn bg-gray-600/20">Pass</button>
       </div>
     </div>
-  `).join('') || '<p class="text-gray-400">No discoveries yet. Check back daily!</p>';
+  `;
+    }).join('') || '<p class="text-gray-400">No discoveries yet. Check back daily!</p>';
 }
 
 function filterDiscoveries(filter) {
