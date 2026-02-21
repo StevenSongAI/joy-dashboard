@@ -1,129 +1,276 @@
 {
   "destinations": [
     {
-      "id": "dest-001",
-      "name": "Bahamas — Atlantis Paradise Island",
-      "type": "international",
-      "status": "actively-planning",
-      "summary": "Atlantis resort vacation. Looking for best deals on The Cove ($3300 CAD target) or The Reef ($2900-3100 CAD). All-inclusive flights + hotel.",
-      "targetDates": "April or May 2026 (6-7 days)",
-      "departure": "Toronto Pearson (YYZ)",
+      "id": "dest-engagement-001",
+      "name": "Costa Rica — Pura Vida Adventure",
+      "destination": "Costa Rica",
+      "type": "Adventure Trip",
+      "status": "researching",
+      "summary": "8-day pre-planned adventure through Intrepid Travel. Cloud forests, volcanoes, wildlife, Pacific beaches.",
+      "notes": "Top pick for engagement trip. Pre-planned with local guides. Fits budget with room to spare.",
+      "tripName": "Costa Rica Experience (Intrepid)",
+      "duration": "8 days",
+      "bestTime": "Year-round (best: Dec-April dry season)",
+      "targetDates": "April-May 2026",
       "estimatedBudget": {
-        "flights": "Included in package",
-        "accommodation": "The Cove: $3300 CAD target | The Reef: $2900-3100 CAD target",
-        "daily": "~$150-200 CAD for food/activities",
-        "total": "$3300-3500 CAD all-inclusive for 6-7 days"
+        "flights": "Not included (~$800-1200 CAD)",
+        "accommodation": "Included (3-4 star lodges)",
+        "daily": "Most meals included",
+        "total": "~$3,100 CAD for 2 (trip only)"
       },
+      "budget": "$3,100 CAD (for 2)",
+      "targetBudget": "$3,100 CAD",
       "highlights": [
-        "Aquaventure water park",
-        "Marine Habitat with 50,000 sea creatures",
-        "Dolphin Cay interactions",
-        "Fine dining at Nobu, Olives, Café Martinique",
-        "The Cove adults-only pool",
-        "Pink sand beaches of Harbour Island (day trip)"
+        "Monteverde cloud forest canopy walks",
+        "Arenal volcano hot springs",
+        "Manuel Antonio wildlife (sloths, monkeys)",
+        "Pre-planned with local Intrepid guides",
+        "Mix of adventure and relaxation"
       ],
-      "practicalNotes": [
-        "The Cove = luxury, quieter, adults-focused",
-        "The Reef = residential-style suites, family-friendly, full kitchens",
-        "Both include access to all Atlantis amenities",
-        "Watch for WestJet Vacations and Air Canada Vacations deals",
-        "Target booking window: 4-8 weeks out for best prices"
-      ],
-      "coordinates": {"lat": 25.0835, "lng": -77.3231},
-      "tags": ["caribbean", "beach", "luxury", "romance", "actively-planning"],
-      "addedAt": "2026-02-08",
+      "travelCompany": "Intrepid Travel",
+      "link": "https://www.intrepidtravel.com/ca/costa-rica/costa-rica-experience-167215",
+      "verified": true,
+      "priority": 1,
       "interest": "high",
-      "bookingStatus": "not-booked",
-      "dealTargets": {
-        "cove": {"maxPrice": 3300, "currency": "CAD", "includes": "flights+hotel"},
-        "reef": {"maxPrice": 3100, "minPrice": 2900, "currency": "CAD", "includes": "flights+hotel"}
-      }
+      "addedAt": "2026-02-21T16:00:00Z"
     },
     {
-      "id": "dest-002",
-      "name": "Japan — Tokyo + Kyoto",
-      "type": "international",
-      "status": "dreaming",
-      "summary": "2-week Japan trip. Tokyo for tech/food/culture, Kyoto for temples and traditional experiences.",
-      "bestTime": "March-April (cherry blossom) or October-November (fall foliage)",
+      "id": "dest-engagement-002",
+      "name": "Iceland — Fire & Ice (Northern Lights)",
+      "destination": "Iceland",
+      "type": "Adventure Trip",
+      "status": "researching",
+      "summary": "6-day Northern Lights Escape through Intrepid. Otherworldly landscapes, glaciers, waterfalls, hot springs.",
+      "notes": "Runner up. Unique landscapes you can't see anywhere else. 6-day version fits budget.",
+      "tripName": "Northern Lights Escape (Intrepid)",
+      "duration": "6 days",
+      "bestTime": "September-March for Northern Lights",
+      "targetDates": "April 2026 (shoulder season)",
       "estimatedBudget": {
-        "flights": "$1200-1800 CAD return",
-        "accommodation": "$100-200/night",
-        "daily": "$80-150 CAD",
-        "total": "$5000-8000 CAD for 2 weeks"
+        "flights": "Not included (~$800-1200 CAD)",
+        "accommodation": "Included",
+        "daily": "Some meals included",
+        "total": "~$6,100 CAD for 2 (trip + flights)"
       },
+      "budget": "$6,100 CAD (for 2, 6-day)",
+      "targetBudget": "$6,100 CAD",
       "highlights": [
-        "Shibuya crossing at night",
-        "Tsukiji outer market for sushi breakfast",
-        "Fushimi Inari shrine at sunrise",
-        "Akihabara for tech/gaming culture",
-        "Onsen day trip to Hakone"
+        "Golden Circle (Geysir, Gullfoss, Thingvellir)",
+        "Jokulsarlon glacier lagoon boat tour",
+        "Blue Lagoon geothermal spa",
+        "Northern Lights hunting",
+        "Reykjavik nightlife & cuisine"
       ],
-      "practicalNotes": [
-        "Get a 14-day Japan Rail Pass (~$450 CAD)",
-        "Pocket WiFi rental at airport is essential",
-        "IC card (Suica/Pasmo) for trains",
-        "Cash still important outside major cities"
-      ],
-      "itinerary": [
-        {"day": 1, "title": "Arrive Tokyo — Shinjuku", "activities": ["Check into hotel", "Evening walk in Shinjuku", "Ramen at local spot"]},
-        {"day": 2, "title": "Tokyo — Tsukiji & Shibuya", "activities": ["Early Tsukiji market", "Shibuya crossing", "Meiji Shrine"]},
-        {"day": 3, "title": "Tokyo — Akihabara", "activities": ["Arcades and retro games", "Electronic stores", "Nakano Broadway"]}
-      ],
-      "coordinates": {"lat": 35.6762, "lng": 139.6503},
-      "tags": ["asia", "food", "culture", "tech", "solo-friendly"],
-      "addedAt": "2026-02-08",
-      "interest": "high"
+      "travelCompany": "Intrepid Travel",
+      "link": "https://www.intrepidtravel.com/ca/iceland/northern-lights-escape-166666",
+      "verified": true,
+      "priority": 2,
+      "interest": "high",
+      "addedAt": "2026-02-21T16:00:00Z"
     },
     {
-      "id": "dest-002",
-      "name": "Iceland — Ring Road",
-      "type": "international",
-      "status": "dreaming",
-      "summary": "The ultimate road trip. 230km through the Canadian Rockies of Iceland. Waterfalls, glaciers, hot springs.",
-      "bestTime": "June-August for midnight sun, September-March for northern lights",
+      "id": "dest-engagement-003",
+      "name": "Japan — Tokyo to Kyoto Express",
+      "destination": "Japan",
+      "type": "Adventure Trip",
+      "status": "researching",
+      "summary": "9-day cultural immersion through Intrepid. Bullet trains, ancient temples, neon cities, amazing food.",
+      "notes": "Best for culture shock + food. Ancient meets futuristic. Fits budget comfortably.",
+      "tripName": "Japan Express (Intrepid)",
+      "duration": "9 days",
+      "bestTime": "March-April (cherry blossom) or Oct-Nov (fall)",
+      "targetDates": "April-May 2026",
       "estimatedBudget": {
-        "flights": "$800-1200 CAD",
-        "accommodation": "$150-250/night",
-        "daily": "$100-150 CAD",
-        "total": "$4000-6000 CAD for 10 days"
+        "flights": "Not included (~$1200-1800 CAD)",
+        "accommodation": "Included (hotels + ryokan)",
+        "daily": "Some meals included",
+        "total": "~$5,400 CAD for 2 (trip + flights)"
       },
+      "budget": "$5,400 CAD (for 2)",
+      "targetBudget": "$5,400 CAD",
       "highlights": [
-        "Blue Lagoon hot springs",
-        "Skógafoss waterfall",
-        "Jökulsárlón glacier lagoon",
-        "Black sand beaches at Vik",
-        "Northern lights hunting"
+        "Tokyo: Shibuya crossing, samurai experience",
+        "Kyoto: Fushimi Inari shrine, bamboo forest",
+        "Osaka: 'Eat until you drop' food tour",
+        "Bullet trains between cities",
+        "Traditional ryokan stay with onsen"
       ],
-      "coordinates": {"lat": 64.9631, "lng": -19.0208},
-      "tags": ["nature", "road-trip", "photography", "adventure"],
-      "addedAt": "2026-02-08",
-      "interest": "high"
+      "travelCompany": "Intrepid Travel",
+      "link": "https://www.intrepidtravel.com/ca/japan/japan-express-166793",
+      "verified": true,
+      "priority": 3,
+      "interest": "high",
+      "addedAt": "2026-02-21T16:00:00Z"
     },
     {
-      "id": "dest-003",
-      "name": "New York City Weekend",
-      "type": "weekend-getaway",
-      "status": "dreaming",
-      "summary": "Long weekend in NYC. Shows, food, museums, and just soaking in the energy.",
-      "bestTime": "April-June or September-November",
+      "id": "dest-engagement-004",
+      "name": "Hawaii — Island Escape",
+      "destination": "Hawaii",
+      "type": "Beach/Relaxation",
+      "status": "researching",
+      "summary": "7-day DIY trip. Waikiki/Maui mix of beach relaxation + volcano hiking. Familiar, easy travel.",
+      "notes": "Classic choice. Not as adventurous but easy. Kayak shows packages from C$589-848/3 nights.",
+      "tripName": "Island Escape (Waikiki/Maui)",
+      "duration": "7 days",
+      "bestTime": "Year-round",
+      "targetDates": "April-May 2026",
       "estimatedBudget": {
-        "flights": "$300-500 CAD",
-        "accommodation": "$200-400/night",
-        "daily": "$100-200 CAD",
-        "total": "$1200-2000 CAD for 3 days"
+        "flights": "Included in packages",
+        "accommodation": "3-5 star hotels",
+        "daily": "~$100-150 CAD food/activities",
+        "total": "~$2,500-4,000 CAD for 2"
       },
+      "budget": "$2,500-4,000 CAD (for 2)",
+      "targetBudget": "$3,500 CAD",
       "highlights": [
-        "Broadway show",
-        "Chelsea Market",
-        "High Line walk",
-        "Brooklyn Bridge at sunset",
-        "Speakeasy bar crawl"
+        "Waikiki Beach",
+        "Volcanoes National Park",
+        "Surfing lessons",
+        "Hawaiian BBQ & poke",
+        "No language barrier"
       ],
-      "coordinates": {"lat": 40.7128, "lng": -74.006},
-      "tags": ["usa", "city", "food", "nightlife", "weekend"],
-      "addedAt": "2026-02-08",
-      "interest": "medium"
+      "travelCompany": "DIY via Kayak/Expedia",
+      "link": "https://www.ca.kayak.com/packages/hawaii",
+      "verified": true,
+      "priority": 5,
+      "interest": "medium",
+      "addedAt": "2026-02-21T16:00:00Z"
+    },
+    {
+      "id": "dest-engagement-005",
+      "name": "Greece — Athens + Islands",
+      "destination": "Greece",
+      "type": "Culture/Beach",
+      "status": "researching",
+      "summary": "7-day DIY trip. Ancient ruins, Santorini/Mykonos islands, Mediterranean food. Best value for culture.",
+      "notes": "Best value. History + islands + food. Kayak shows 3-night packages from C$383.",
+      "tripName": "Athens + Islands",
+      "duration": "7 days",
+      "bestTime": "April-May or September-October (shoulder season)",
+      "targetDates": "April-May 2026",
+      "estimatedBudget": {
+        "flights": "Included in packages",
+        "accommodation": "3-4 star hotels",
+        "daily": "~$80-120 CAD food/activities",
+        "total": "~$2,000-3,500 CAD for 2"
+      },
+      "budget": "$2,000-3,500 CAD (for 2)",
+      "targetBudget": "$2,500 CAD",
+      "highlights": [
+        "Acropolis and ancient ruins",
+        "Santorini/Mykonos island hopping",
+        "Mediterranean food scene",
+        "Walking tours of Athens",
+        "Beach relaxation"
+      ],
+      "travelCompany": "DIY via Kayak/Expedia",
+      "link": "https://www.ca.kayak.com/packages/greece",
+      "verified": true,
+      "priority": 7,
+      "interest": "medium",
+      "addedAt": "2026-02-21T16:00:00Z"
+    },
+    {
+      "id": "dest-engagement-006",
+      "name": "Maldives — Overwater Luxury",
+      "destination": "Maldives",
+      "type": "Luxury/Beach",
+      "status": "researching",
+      "summary": "7-day overwater villa experience. Ultimate honeymoon destination but mostly resort-focused.",
+      "notes": "Bucket-list luxury but expensive. Resort-focused (less adventure). Seaplane transfers add $300-500.",
+      "tripName": "Overwater Villa Experience",
+      "duration": "7 days",
+      "bestTime": "December-March (dry season)",
+      "targetDates": "April-May 2026",
+      "estimatedBudget": {
+        "flights": "Included in packages",
+        "accommodation": "Overwater villas (4-5 star)",
+        "daily": "Resort dining (~$200-300/day)",
+        "total": "~$4,000-6,000 CAD for 2"
+      },
+      "budget": "$4,000-6,000 CAD (for 2)",
+      "targetBudget": "$5,000 CAD",
+      "highlights": [
+        "Overwater bungalows",
+        "World-class diving/snorkeling",
+        "Private beaches",
+        "Ultimate romance setting",
+        "All-inclusive resort options"
+      ],
+      "travelCompany": "DIY via Kayak/Expedia",
+      "link": "https://www.ca.kayak.com/packages/maldives",
+      "verified": true,
+      "priority": 6,
+      "interest": "medium",
+      "addedAt": "2026-02-21T16:00:00Z"
+    },
+    {
+      "id": "dest-engagement-007",
+      "name": "Amalfi Coast — Italian Riviera",
+      "destination": "Amalfi Coast",
+      "type": "Romance/Culture",
+      "status": "researching",
+      "summary": "7-day cliffside villages and Italian romance. Positano, Ravello, day trips to Capri.",
+      "notes": "Romantic but priciest option. Less adventure, more relaxation. Kayak shows 3-night from C$1,723.",
+      "tripName": "Italian Riviera Experience",
+      "duration": "7 days",
+      "bestTime": "April-May or September-October",
+      "targetDates": "April-May 2026",
+      "estimatedBudget": {
+        "flights": "Included in packages",
+        "accommodation": "Boutique hotels",
+        "daily": "~$150-200 CAD food/activities",
+        "total": "~$4,000-6,000 CAD for 2"
+      },
+      "budget": "$4,000-6,000 CAD (for 2)",
+      "targetBudget": "$5,000 CAD",
+      "highlights": [
+        "Cliffside villages (Positano, Ravello)",
+        "Day trips to Capri/Pompeii",
+        "Italian food & wine",
+        "Scenic coastal drives",
+        "Romantic atmosphere"
+      ],
+      "travelCompany": "DIY via Kayak/Expedia",
+      "link": "https://www.ca.kayak.com/packages/amalfi",
+      "verified": true,
+      "priority": 8,
+      "interest": "low",
+      "addedAt": "2026-02-21T16:00:00Z"
+    },
+    {
+      "id": "dest-engagement-008",
+      "name": "Patagonia — End of the World",
+      "destination": "Patagonia",
+      "type": "Adventure Trip",
+      "status": "dreaming",
+      "summary": "8-10 day trekking adventure. Torres del Paine, Perito Moreno glacier, Fitz Roy. Bucket list but over budget.",
+      "notes": "Over budget (~$10K) but bucket-list worthy. Serious hiking, dramatic landscapes. Consider if willing to stretch.",
+      "tripName": "Classic Hikes of Patagonia",
+      "duration": "8-10 days",
+      "bestTime": "December-February (summer)",
+      "targetDates": "December 2026-January 2027",
+      "estimatedBudget": {
+        "flights": "Not included (~$1500-2000 CAD)",
+        "accommodation": "Included (lodges/camping)",
+        "daily": "Most meals included",
+        "total": "~$10,000+ CAD for 2"
+      },
+      "budget": "$10,000+ CAD (for 2)",
+      "targetBudget": "$10,000+ CAD",
+      "highlights": [
+        "Torres del Paine W-trek or O-circuit",
+        "Perito Moreno glacier trekking",
+        "El Chaltén (Fitz Roy views)",
+        "Ushuaia — world's southernmost city",
+        "Wildlife: guanacos, condors, pumas"
+      ],
+      "travelCompany": "MT Sobek or Intrepid",
+      "link": "https://www.mtsobek.com",
+      "verified": true,
+      "priority": 4,
+      "interest": "high",
+      "addedAt": "2026-02-21T16:00:00Z"
     }
   ],
   "bucketListDestinations": [
@@ -134,24 +281,6 @@
       "bestTime": "December-February (summer)",
       "roughBudget": "$5000-7000 CAD for 2 weeks",
       "priority": "high",
-      "addedAt": "2026-02-08"
-    },
-    {
-      "id": "bucket-002",
-      "name": "Morocco — Marrakech & Sahara",
-      "why": "Intense sensory experience. Markets, food, desert camping under stars.",
-      "bestTime": "March-May or September-November",
-      "roughBudget": "$3000-4500 CAD for 10 days",
-      "priority": "medium",
-      "addedAt": "2026-02-08"
-    },
-    {
-      "id": "bucket-003",
-      "name": "New Zealand — South Island",
-      "why": "Lord of the Rings landscapes, adventure activities, fjords.",
-      "bestTime": "December-February",
-      "roughBudget": "$6000-9000 CAD for 3 weeks",
-      "priority": "medium",
       "addedAt": "2026-02-08"
     }
   ],
