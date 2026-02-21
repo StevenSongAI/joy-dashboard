@@ -232,8 +232,8 @@ function renderTravel() {
     const budget = dest.estimatedBudget?.total || dest.budget || dest.targetBudget || 'TBD';
     const interest = dest.interest || (dest.priority <= 2 ? 'high' : dest.priority <= 4 ? 'medium' : 'low');
     
-    return `
-    <div class="card p-4">
+    const cardContent = `
+    <div class="card p-4 hover:bg-dark-700 transition-colors">
       <div class="flex items-start justify-between mb-2">
         <div>
           <span class="category-badge ${getStatusColor(dest.status)}">${dest.status}</span>
@@ -241,12 +241,14 @@ function renderTravel() {
         </div>
         <span class="text-2xl">${interest === 'high' ? '🔥' : interest === 'medium' ? '👍' : '🤔'}</span>
       </div>
-      <h3 class="text-lg font-bold mb-1">${name}</h3>
+      ${dest.screenshot ? `<img src="${dest.screenshot}" alt="${name} pricing" class="w-full h-48 object-cover rounded-lg mb-3" />` : ''}
+      <h3 class="text-lg font-bold mb-1">${dest.link ? `<a href="${dest.link}" target="_blank" class="text-blue-400 hover:underline">${name}</a>` : name}</h3>
       <p class="text-sm text-gray-400 mb-2">${summary}</p>
       <div class="flex flex-wrap gap-2 text-sm">
         <span class="text-gray-500">🗓️ ${bestTime}</span>
         <span class="text-gray-500">💰 ${budget}</span>
       </div>
+      ${dest.estimatedBudget?.grandTotal ? `<p class="text-sm text-green-400 mt-1">Total: ${dest.estimatedBudget.grandTotal}</p>` : ''}
       ${dest.highlights ? `
         <div class="mt-3 pt-3 border-t border-dark-600">
           <p class="text-sm font-medium mb-1">Highlights:</p>
@@ -255,8 +257,11 @@ function renderTravel() {
           </ul>
         </div>
       ` : ''}
+      ${dest.link ? `<a href="${dest.link}" target="_blank" class="mt-3 inline-block text-sm text-blue-400 hover:underline">View trip details →</a>` : ''}
     </div>
-  `}).join('') || '<p class="text-gray-400 col-span-2">No destinations yet. Start dreaming!</p>';
+  `;
+    return dest.link ? `<a href="${dest.link}" target="_blank" class="block no-underline">${cardContent}</a>` : cardContent;
+  }).join('') || '<p class="text-gray-400 col-span-2">No destinations yet. Start dreaming!</p>';
   
   // Bucket list
   document.getElementById('bucket-list-destinations').innerHTML = bucketList.map(dest => `
