@@ -183,8 +183,8 @@ function renderWhatsOn() {
         <span class="category-badge bg-orange-600">${latest.category}</span>
         <span class="confidence-stars">${'⭐'.repeat(latest.confidence || 3)}</span>
       </div>
-      <h3 class="text-lg font-bold mb-2">${latest.title || latest.headline || 'Untitled'}</h3>
-      <p class="text-gray-300 mb-3">${latest.summary || latest.description || ''}</p>
+      <h3 class="text-lg font-bold mb-2">${latest.title || latest.headline || latest.name || 'Untitled'}</h3>
+      <p class="text-gray-300 mb-3">${latest.summary || latest.description || latest.notes || ''}</p>
       <p class="text-sm text-blue-400">${latest.whySteven || ''}</p>
     </div>
   ` : '<p class="text-gray-400">No discoveries yet.</p>';
@@ -223,32 +223,40 @@ function renderTravel() {
     if (el) el.textContent = counts[status];
   });
   
-  // Destinations list
-  document.getElementById('destinations-list').innerHTML = destinations.map(dest => `
+  // Destinations list - handle both old format and new API format
+  document.getElementById('destinations-list').innerHTML = destinations.map(dest => {
+    // Handle field name variations
+    const name = dest.name || dest.destination || dest.tripName || 'Unnamed Destination';
+    const summary = dest.summary || dest.notes || dest.description || '';
+    const bestTime = dest.bestTime || dest.targetDates || dest.duration || 'TBD';
+    const budget = dest.estimatedBudget?.total || dest.budget || dest.targetBudget || 'TBD';
+    const interest = dest.interest || (dest.priority <= 2 ? 'high' : dest.priority <= 4 ? 'medium' : 'low');
+    
+    return `
     <div class="card p-4">
       <div class="flex items-start justify-between mb-2">
         <div>
           <span class="category-badge ${getStatusColor(dest.status)}">${dest.status}</span>
           <span class="category-badge bg-blue-600 ml-2">${dest.type}</span>
         </div>
-        <span class="text-2xl">${dest.interest === 'high' ? '🔥' : dest.interest === 'medium' ? '👍' : '🤔'}</span>
+        <span class="text-2xl">${interest === 'high' ? '🔥' : interest === 'medium' ? '👍' : '🤔'}</span>
       </div>
-      <h3 class="text-lg font-bold mb-1">${dest.name}</h3>
-      <p class="text-sm text-gray-400 mb-2">${dest.summary}</p>
+      <h3 class="text-lg font-bold mb-1">${name}</h3>
+      <p class="text-sm text-gray-400 mb-2">${summary}</p>
       <div class="flex flex-wrap gap-2 text-sm">
-        <span class="text-gray-500">🗓️ ${dest.bestTime}</span>
-        <span class="text-gray-500">💰 ${dest.estimatedBudget?.total || 'TBD'}</span>
+        <span class="text-gray-500">🗓️ ${bestTime}</span>
+        <span class="text-gray-500">💰 ${budget}</span>
       </div>
-      ${dest.itinerary ? `
+      ${dest.highlights ? `
         <div class="mt-3 pt-3 border-t border-dark-600">
-          <p class="text-sm font-medium mb-1">Itinerary Highlights:</p>
+          <p class="text-sm font-medium mb-1">Highlights:</p>
           <ul class="text-sm text-gray-400">
-            ${dest.itinerary.slice(0, 3).map(day => `<li>Day ${day.day}: ${day.title}</li>`).join('')}
+            ${dest.highlights.slice(0, 3).map(h => `<li>• ${h}</li>`).join('')}
           </ul>
         </div>
       ` : ''}
     </div>
-  `).join('') || '<p class="text-gray-400 col-span-2">No destinations yet. Start dreaming!</p>';
+  `}).join('') || '<p class="text-gray-400 col-span-2">No destinations yet. Start dreaming!</p>';
   
   // Bucket list
   document.getElementById('bucket-list-destinations').innerHTML = bucketList.map(dest => `
@@ -661,8 +669,8 @@ function renderDiscoveries() {
     const disc = discoveries.find(d => d.id === highlight.id);
     if (disc) {
       // Handle both old format (title/summary) and new format (headline/description)
-      const title = disc.title || disc.headline || 'Untitled';
-      const summary = disc.summary || disc.description || '';
+      const title = disc.title || disc.headline || disc.name || 'Untitled';
+      const summary = disc.summary || disc.description || disc.notes || '';
       document.getElementById('weekly-highlight').innerHTML = `
         <div class="p-4 bg-dark-700 rounded-lg">
           <div class="flex items-center gap-2 mb-2">
@@ -687,8 +695,8 @@ function renderDiscoveriesList(discoveries) {
     .sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt))
     .map(disc => {
       // Handle both old format (title/summary) and new format (headline/description)
-      const title = disc.title || disc.headline || 'Untitled';
-      const summary = disc.summary || disc.description || '';
+      const title = disc.title || disc.headline || disc.name || 'Untitled';
+      const summary = disc.summary || disc.description || disc.notes || '';
       return `
     <div class="card p-4">
       <div class="flex items-start justify-between mb-2">
