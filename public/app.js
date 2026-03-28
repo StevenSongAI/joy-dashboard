@@ -232,17 +232,24 @@ function renderTravel() {
     const budget = dest.estimatedBudget?.total || dest.budget || dest.targetBudget || 'TBD';
     const interest = dest.interest || (dest.priority <= 2 ? 'high' : dest.priority <= 4 ? 'medium' : 'low');
     
+    const hasDetail = !!(dest.itinerary || dest.bookings || (dest.highlights && dest.highlights.length > 3));
+    // Store dest data on window for modal lookup by id
+    window._travelDestStore = window._travelDestStore || {};
+    window._travelDestStore[dest.id] = dest;
     const cardContent = `
-    <div class="card p-4 hover:bg-dark-700 transition-colors">
+    <div class="card p-4 hover:bg-dark-700 transition-colors ${hasDetail ? 'cursor-pointer' : ''}" ${hasDetail ? `onclick="openTravelModal('${dest.id}')"` : ''}>
       <div class="flex items-start justify-between mb-2">
         <div>
           <span class="category-badge ${getStatusColor(dest.status)}">${dest.status}</span>
           <span class="category-badge bg-blue-600 ml-2">${dest.type}</span>
         </div>
-        <span class="text-2xl">${interest === 'high' ? '🔥' : interest === 'medium' ? '👍' : '🤔'}</span>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">${interest === 'high' ? '🔥' : interest === 'medium' ? '👍' : '🤔'}</span>
+          ${hasDetail ? '<span class="text-xs text-blue-400">tap for details</span>' : ''}
+        </div>
       </div>
       ${dest.screenshot ? `<img src="${dest.screenshot}" alt="${name} pricing" class="w-full h-48 object-cover rounded-lg mb-3" />` : ''}
-      <h3 class="text-lg font-bold mb-1">${dest.link ? `<a href="${dest.link}" target="_blank" class="text-blue-400 hover:underline">${name}</a>` : name}</h3>
+      <h3 class="text-lg font-bold mb-1">${name}</h3>
       <p class="text-sm text-gray-400 mb-2">${summary}</p>
       <div class="flex flex-wrap gap-2 text-sm">
         <span class="text-gray-500">🗓️ ${bestTime}</span>
@@ -257,10 +264,9 @@ function renderTravel() {
           </ul>
         </div>
       ` : ''}
-      ${dest.link ? `<a href="${dest.link}" target="_blank" class="mt-3 inline-block text-sm text-blue-400 hover:underline">View trip details →</a>` : ''}
     </div>
   `;
-    return dest.link ? `<a href="${dest.link}" target="_blank" class="block no-underline">${cardContent}</a>` : cardContent;
+    return cardContent;
   }).join('') || '<p class="text-gray-400 col-span-2">No destinations yet. Start dreaming!</p>';
   
   // Bucket list
@@ -1368,3 +1374,95 @@ showTab = function(tabName) {
 
 // Start
 init();
+
+// ── Travel Detail Modal ──────────────────────────────────────────────────────
+
+function openTravelModal(destId) {
+  const dest = (window._travelDestStore || {})[destId];
+  if (!dest) return;
+  const modal = document.getElementById('travel-modal');
+  const body = document.getElementById('travel-modal-body');
+
+  const name = dest.name || dest.tripName || 'Destination';
+  const summary = dest.summary || '';
+  const notes = dest.notes || '';
+
+  // Itinerary section
+  let itineraryHtml = '';
+  if (dest.itinerary) {
+    const days = Object.entries(dest.itinerary);
+    itineraryHtml = `
+      <div class="mb-5">
+        <h3 class="text-base font-bold mb-3 text-blue-400">📅 Day-by-Day Itinerary</h3>
+        ${days.map(([key, val]) => {
+          const isProposal = val.toLowerCase().includes('proposal');
+          return `<div class="itinerary-day ${isProposal ? 'proposal-day' : ''}">
+            <p class="text-sm text-gray-200">${isProposal ? '⭐ ' : ''}${val}</p>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  // Bookings section
+  let bookingsHtml = '';
+  if (dest.bookings) {
+    const rows = Object.entries(dest.bookings);
+    bookingsHtml = `
+      <div class="mb-5">
+        <h3 class="text-base font-bold mb-3 text-blue-400">📋 Booking Status</h3>
+        ${rows.map(([key, val]) => `
+          <div class="booking-row">
+            <span class="text-gray-300 capitalize">${key.replace(/([A-Z])/g, ' $1').trim()}:</span>
+            <span class="text-gray-200">${val}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  // All highlights
+  let highlightsHtml = '';
+  if (dest.highlights && dest.highlights.length > 0) {
+    highlightsHtml = `
+      <div class="mb-5">
+        <h3 class="text-base font-bold mb-3 text-blue-400">✨ Highlights</h3>
+        <ul class="space-y-1">
+          ${dest.highlights.map(h => `<li class="text-sm text-gray-300">• ${h}</li>`).join('')}
+        </ul>
+      </div>`;
+  }
+
+  body.innerHTML = `
+    <div class="flex items-start justify-between mb-1 pr-8">
+      <h2 class="text-xl font-bold">${name}</h2>
+    </div>
+    ${dest.targetDates || dest.duration ? `<p class="text-sm text-gray-400 mb-1">🗓️ ${dest.targetDates || dest.duration}</p>` : ''}
+    ${dest.destination ? `<p class="text-sm text-gray-400 mb-3">📍 ${dest.destination}</p>` : ''}
+    ${summary ? `<p class="text-sm text-gray-300 mb-4 leading-relaxed">${summary}</p>` : ''}
+    ${notes ? `<p class="text-xs text-gray-500 mb-4 italic">${notes}</p>` : ''}
+    <hr style="border-color:#30303a;margin-bottom:1.25rem">
+    ${bookingsHtml}
+    ${itineraryHtml}
+    ${highlightsHtml}
+    ${!itineraryHtml && !bookingsHtml && !highlightsHtml ? '<p class="text-gray-400 text-sm">No additional details available.</p>' : ''}
+  `;
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTravelModal(event) {
+  // Close if: called directly (no event), backdrop click, or close button
+  if (event && event.target !== document.getElementById('travel-modal')) return;
+  const modal = document.getElementById('travel-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeTravelModalDirect() {
+  const modal = document.getElementById('travel-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeTravelModalDirect();
+});
